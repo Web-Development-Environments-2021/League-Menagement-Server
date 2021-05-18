@@ -11,4 +11,26 @@ router.get("/getDetails", async (req, res, next) => {
   }
 });
 
+router.get("/getPastGame", async (req, res, next) => {
+  try {
+    const league_details = await league_utils.getPastGameDetails();
+    res.send(league_details);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/getFutureGame", async (req, res, next) => {
+  try {
+    const league_details = await league_utils.getFutureGameDetails();
+    res.send(league_details);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
+
+/*
+TODO: dsfdfsdfsfd
+*/
