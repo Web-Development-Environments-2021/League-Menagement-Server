@@ -39,7 +39,7 @@ async function getPastGameDetails(){
     `https://soccer.sportmonks.com/api/v2.0/fixtures/between/${ENDATEPAST}/${STARTDATE}`,
     {
       params: {
-        leagues: LEAGUE_ID,
+        leagues: LEAGUE_ID, 
         include: "venue, league",
         api_token: process.env.api_token,
       },
