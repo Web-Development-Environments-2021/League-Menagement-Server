@@ -141,7 +141,7 @@ paths:
           description: nothing found
         "400":
           description: bad input parameter
-  /teams/teamFullDetails/{teamId}: #/user/{username}/getMyTeams/:
+  /teams/teamFullDetails/{teamId}: 
     get:
       tags:
       - user
@@ -169,6 +169,22 @@ paths:
                   $ref: '#/components/schemas/team'
         "404":
           description: teamId is not exists
+  /league/getDetails:
+    get:
+      tags:
+        - league
+      summary: Return the details about the current league
+      responses:
+        "200":
+          description: data about the current league returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/League"
+        "400":
+          description: wrong input parameters
 components:
   schemas:
     userSignUp:
