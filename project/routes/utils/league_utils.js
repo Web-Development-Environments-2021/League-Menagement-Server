@@ -94,6 +94,7 @@ const extractRelevantGameData = async (fixtures,isPastGame)=> {
     );
 
     game_info={
+      id: fixtures.data.data[i].id,
       date: fixtures.data.data[i].time.starting_at.date,
       time: fixtures.data.data[i].time.starting_at.time,
       league_name: fixtures.data.data[i].league.data.name,
