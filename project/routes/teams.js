@@ -10,7 +10,8 @@ router.get("/teamFullDetails/:teamId", async (req, res, next) => {
     const team_player_details = await players_utils.getPlayersByTeam(req.params.teamId);
     const team_coach = await teams_utils.getCoachName(req.params.teamId);
     //we should keep implementing team page.....
-    res.send(team_player_details);
+    //extract data from DB
+    res.send([team_coach,team_player_details]);
   } catch (error) {
     next(error);
   }
