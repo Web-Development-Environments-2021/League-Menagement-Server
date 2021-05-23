@@ -8,9 +8,8 @@ async function getCoachName(team_id) {
         api_token: process.env.api_token,
       },
     });
-    
-    return coach_data.data.data.coach.common_name;
+    console.log(coach_data.data.data.coach.data.common_name);
+    return {coach_name: coach_data.data.data.coach.data.common_name};
 }
-
 
 exports.getCoachName = getCoachName;
