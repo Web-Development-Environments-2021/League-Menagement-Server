@@ -1,5 +1,5 @@
 const axios = require("axios");
-//const DButils = require("../routes/utils/DButils");
+const DButils = require("../utils/DButils");
 const LEAGUE_ID = 271;
 const today = new Date();
 const STARTDATE = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -116,11 +116,20 @@ const extractRelevantGameData = async (fixtures,isPastGame)=> {
       game_info["events_schedule"]= fixtures.data.data[i].events.data;
 
     } 
+    else{
+      game_info["winner"] = "none";
+      game_info["events_schedule"]= -1;
+    }
+    console.log(Object.keys(game_info));
+    // console.log(Object.values(game_info));
 
-    // // add the past Games
-    // await DButils.execQuery(
-    // `INSERT INTO dbo.games ('${game_info.keys()}') VALUES ('${game_info.value()}')`
-    // );
+    for(const key in Object.keys(game_info)){
+      // add the past Games
+      await DButils.execQuery(
+      `INSERT INTO dbo.games ('${key}') VALUES ('${game_info[key]}')`
+      );
+    }
+    
 
     list_of_info.push(game_info);
   };
