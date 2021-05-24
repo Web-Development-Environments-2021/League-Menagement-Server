@@ -1,6 +1,8 @@
 const axios = require("axios");
 const { DateTime } = require("mssql");
 const DButils = require("../utils/DButils");
+const auth_utils = require("../utils/auth_utils");
+const classes = require("../../classes");
 const LEAGUE_ID = 271;
 const today = new Date();
 const STARTDATE = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
@@ -45,24 +47,28 @@ async function getPastGameDetails() {
         }
     );
 
-    //next game details should come from DB
-    return extractRelevantGameData(fixtures, true);
-
+  //next game details should come from DB
+  return extractRelevantGameData(fixtures, true);
 }
 
-async function getFutureGameDetails() {
-    const fixtures = await axios.get(
-        `https://soccer.sportmonks.com/api/v2.0/fixtures/between/${STARTDATE}/${ENDATEFUTURE}`, {
-            params: {
-                leagues: LEAGUE_ID,
-                include: "venue, league, events.player",
-                api_token: process.env.api_token,
-            },
-        }
-    );
-    // next game details should come from DB
-    return extractRelevantGameData(fixtures, false);
-
+async function getFutureGameDetails(){
+  if(!(auth_utils.get_curr_user_login_permoission() instanceof classes.Union_Reps_Auth)){
+    console.log(false);
+    return;
+  }
+  console.log(true);
+  const fixtures = await axios.get(
+    `https://soccer.sportmonks.com/api/v2.0/fixtures/between/${STARTDATE}/${ENDATEFUTURE}`,
+    {
+      params: {
+        leagues: LEAGUE_ID,
+        include: "venue, league, events.player",
+        api_token: process.env.api_token,
+      },
+    }
+  );
+  // next game details should come from DB
+  return extractRelevantGameData(fixtures, false);
 }
 async function insert_events(events, date, time) {
     for (let i = 0; i < 3; i++) {
@@ -133,9 +139,8 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
         };
         events = fixtures.data.data[i].events;
         if (isPastGame) {
-
             game_info["winner"] = fixtures.data.data[i].winner_team_id;
-
+            await insert_events(events, game_info.date, fixtures.data.data[i].time.starting_at.time);
         } else {
             game_info["winner"] = "none";
         }
@@ -143,9 +148,6 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
         await DButils.execQuery(
             query
         );
-        await insert_events(events, game_info.date, fixtures.data.data[i].time.starting_at.time);
-
-
         list_of_info.push(game_info);
     };
 

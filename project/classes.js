@@ -22,7 +22,6 @@ class Member_User_Role_Holder extends Member_User {
         if (role == "referee") {
             this.role = new Referee();
         }
-
     }
 }
 
@@ -59,3 +58,8 @@ class Referee extends Role {
 
     }
 }
+
+exports.User = User;
+exports.Member_User = Member_User;
+exports.Member_User_Role_Holder = Member_User_Role_Holder;
+exports.Union_Reps_Auth = Union_Reps_Auth;

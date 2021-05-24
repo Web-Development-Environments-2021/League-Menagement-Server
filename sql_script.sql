@@ -32,8 +32,8 @@ CREATE TABLE [dbo].[events_schedule](
 
 CREATE TABLE [dbo].[games](
     [id] [int]  NOT NULL PRIMARY KEY,
-	[date] [DATE] NOT NULL,
-	[time] [TIME] NOT NULL,
+	[date] [varchar] (30) NOT NULL,
+	[time] [varchar] (30) NOT NULL,
 	[league_name] [varchar](300) NOT NULL,
     [home_team_name] [varchar](30) NOT NULL,
     [away_team_name] [varchar](30) NOT NULL,
@@ -41,7 +41,6 @@ CREATE TABLE [dbo].[games](
     [away_score] [int] NOT NULL,
     [filed] [varchar] (30) NOT NULL,
     [winner] [varchar] (30) NOT NULL,
-    [events_scheduleID] [int] FOREIGN KEY REFERENCES events_schedule(events_scheduleID)
 );
 
 CREATE TABLE [dbo].[favoriteGames](
