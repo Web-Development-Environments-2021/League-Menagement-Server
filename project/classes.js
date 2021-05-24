@@ -7,7 +7,7 @@ class User {
 class Member_User extends User {
     constructor(username, permission) {
         super(username);
-        if (permission == "fan") {
+        if (permission == "Fan") {
             this.permission = new Fan();
         } else if (permission == "Representative") {
             this.permission = new Union_Reps_Auth();
