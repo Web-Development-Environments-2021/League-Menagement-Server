@@ -19,6 +19,9 @@ class Member_User extends User {
 class Member_User_Role_Holder extends Member_User {
     constructor(username, permission, role) {
         super(username, permission);
+        if (role == "referee") {
+            this.role = new Referee();
+        }
 
     }
 }
