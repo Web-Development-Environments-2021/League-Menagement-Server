@@ -2,8 +2,9 @@ var express = require("express");
 var router = express.Router();
 const DButils = require("../routes/utils/DButils");
 const auth_utils = require("../routes/utils/auth_utils");
+const classes = require("../classes")
 const bcrypt = require("bcryptjs");
-let isRepresentativeLogin = false;
+let user_login;
 
 router.post("/Register", async (req, res, next) => {
   try {
@@ -43,7 +44,7 @@ router.post("/Login", async (req, res, next) => {
     )[0];
     // user = user[0];
     console.log(user);
-    console.log(user.permission)
+    console.log(user.permissions)
     
     // check that username exists & the password is correct
     if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
@@ -53,9 +54,10 @@ router.post("/Login", async (req, res, next) => {
     // Set cookie
     req.session.user_id = user.user_id;
 
-    const user_login = new Member_User(user.username, user.permission);
+    //user_login = new classes.Member_User(user.username, user.permissions);
 
     // console.log(auth_utils.updateRepresentativeLogin(user, req.body.password));
+    auth_utils.createMemeberUser(user);
 
     // return cookie
     res.status(200).send("login succeeded");
@@ -68,5 +70,10 @@ router.post("/Logout", function (req, res) {
   req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
   res.send({ success: true, message: "logout succeeded" });
 });
+
+const getUserLogin = ()=>{
+  return user_login;
+}
+
 
 module.exports = router;

@@ -7,7 +7,7 @@ class User {
 class Member_User extends User {
     constructor(username, permission) {
         super(username);
-        if (permission == "fan") {
+        if (permission == "Fan") {
             this.permission = new Fan();
         } else if (permission == "Representative") {
             this.permission = new Union_Reps_Auth();
@@ -22,7 +22,6 @@ class Member_User_Role_Holder extends Member_User {
         if (role == "referee") {
             this.role = new Referee();
         }
-
     }
 }
 
@@ -59,3 +58,8 @@ class Referee extends Role {
 
     }
 }
+
+exports.User = User;
+exports.Member_User = Member_User;
+exports.Member_User_Role_Holder = Member_User_Role_Holder;
+exports.Union_Reps_Auth = Union_Reps_Auth;
