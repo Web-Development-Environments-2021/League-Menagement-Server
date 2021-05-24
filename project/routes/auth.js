@@ -1,7 +1,9 @@
 var express = require("express");
 var router = express.Router();
 const DButils = require("../routes/utils/DButils");
+const auth_utils = require("../routes/utils/auth_utils");
 const bcrypt = require("bcryptjs");
+let isRepresentativeLogin = false;
 
 router.post("/Register", async (req, res, next) => {
   try {
@@ -24,7 +26,7 @@ router.post("/Register", async (req, res, next) => {
 
     // add the new username
     await DButils.execQuery(
-      `INSERT INTO dbo.users (username, password) VALUES ('${req.body.username}', '${hash_password}')`
+      `INSERT INTO dbo.users (username, password, permissions) VALUES ('${req.body.username}', '${hash_password}', 'Fan')`
     );
     res.status(201).send("user created");
   } catch (error) {
@@ -41,6 +43,7 @@ router.post("/Login", async (req, res, next) => {
     )[0];
     // user = user[0];
     console.log(user);
+    console.log(user.permission)
     
     // check that username exists & the password is correct
     if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
@@ -49,6 +52,10 @@ router.post("/Login", async (req, res, next) => {
 
     // Set cookie
     req.session.user_id = user.user_id;
+
+    const user_login = new Member_User(user.username, user.permission);
+
+    // console.log(auth_utils.updateRepresentativeLogin(user, req.body.password));
 
     // return cookie
     res.status(200).send("login succeeded");

@@ -49,7 +49,6 @@ async function getPastGameDetails(){
 
   //next game details should come from DB
   return extractRelevantGameData(fixtures, true);
-
 }
 
 async function getFutureGameDetails(){
@@ -65,7 +64,6 @@ async function getFutureGameDetails(){
   );
   // next game details should come from DB
   return extractRelevantGameData(fixtures, false);
-
 }
 
 const extractRelevantGameData = async (fixtures,isPastGame)=> {
@@ -95,14 +93,14 @@ const extractRelevantGameData = async (fixtures,isPastGame)=> {
 
     game_info={
       id: fixtures.data.data[i].id,
-      date: fixtures.data.data[i].time.starting_at.date,
-      time: fixtures.data.data[i].time.starting_at.time,
-      league_name: fixtures.data.data[i].league.data.name,
-      home_team_name: home_team.data.data.name,
-      away_team_name: away_team.data.data.name,
+      date: `'${fixtures.data.data[i].time.starting_at.date}'`,
+      time: `'${fixtures.data.data[i].time.starting_at.time}'`,
+      league_name: `'${fixtures.data.data[i].league.data.name}'`,
+      home_team_name: `'${home_team.data.data.name}'`,
+      away_team_name: `'${away_team.data.data.name}'`,
       home_score: fixtures.data.data[i].scores.localteam_score,
       away_score: fixtures.data.data[i].scores.visitorteam_score,
-      filed: fixtures.data.data[i].venue.data.name,
+      filed: `'${fixtures.data.data[i].venue.data.name}'`,
       
     };
     if(isPastGame){
@@ -113,29 +111,28 @@ const extractRelevantGameData = async (fixtures,isPastGame)=> {
       // }
 
       game_info["winner"] = fixtures.data.data[i].winner_team_id;
-      game_info["events_schedule"]= fixtures.data.data[i].events.data;
+      //game_info["events_schedule"]= fixtures.data.data[i].events.data;
 
     } 
     else{
       game_info["winner"] = "none";
-      game_info["events_schedule"]= -1;
+      //game_info["events_schedule"]= -1;
     }
     console.log(Object.keys(game_info));
-    // console.log(Object.values(game_info));
+    console.log(Object.values(game_info));
 
-    for(const key in Object.keys(game_info)){
-      // add the past Games
-      await DButils.execQuery(
-      `INSERT INTO dbo.games ('${key}') VALUES ('${game_info[key]}')`
-      );
-    }
-    
-
+    // for(const key in game_info){
+    //   // add the past Games
+    //   await DButils.execQuery(
+    //   `INSERT INTO dbo.games (${key}) VALUES (${game_info[key]})`
+    //   );
+    // }
+    //add the past Games
+    await DButils.execQuery(
+    `INSERT INTO dbo.games (${Object.keys(game_info)}) VALUES (${Object.values(game_info)})`
+    );
     list_of_info.push(game_info);
   };
-
-  
-
   return list_of_info;
 };
   
