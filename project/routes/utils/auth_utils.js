@@ -1,23 +1,25 @@
 const auth = require("../auth");
-const classes = require("../../classes")
+const classes = require("../../classes");
+const reps = require("../utils/permission_representative");
 const bcrypt = require("bcryptjs");
 let user_login;
 
-// getPermission(){
-//     let permission = '';
-//     permission = updateRepresentativeLogin();
-//     permission = getReffere();
-//     permission = getplayer();
 
-//     return permission;
-// };
 
 function createMemeberUser (user){
+    // if((user.permissions == "Representative") && (reps.RepresentativePermission() == "undefined")){
+        
+    // }
     user_login = new classes.Member_User(user.username, user.permissions);    
 }
 
 const get_curr_user_login_permoission = ()=>{
-    return user_login.permission;  
+    if((user_login.permission instanceof classes.Union_Reps_Auth)){
+        return true;
+      }
+      else{
+        return false; 
+      }
 }
 
 const canHaveRepresentativePermission = (user)=>{

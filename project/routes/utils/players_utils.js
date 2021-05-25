@@ -60,8 +60,6 @@ async function getCoachesInfo(coaches_ids_list, isFull) {
             preview_info[i] = Object.assign({}, preview_info[i], fullInfo[i])
         }
     }
-
-
     return preview_info;
 }
 
@@ -121,6 +119,8 @@ async function getTeamById(team_id) {
     });
     return team.data.data.name;
 }
+
+
 
 exports.getPlayersByTeam = getPlayersByTeam;
 exports.getPlayersInfo = getPlayersInfo;

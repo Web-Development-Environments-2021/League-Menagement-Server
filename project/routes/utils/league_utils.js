@@ -1,8 +1,7 @@
 const axios = require("axios");
 const { DateTime } = require("mssql");
 const DButils = require("../utils/DButils");
-const auth_utils = require("../utils/auth_utils");
-const classes = require("../../classes");
+
 const LEAGUE_ID = 271;
 const today = new Date();
 const STARTDATE = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
@@ -33,9 +32,6 @@ async function getLeagueDetails() {
     };
 }
 
-//CurrentCycleGames
-
-
 async function getPastGameDetails() {
     const fixtures = await axios.get(
         `https://soccer.sportmonks.com/api/v2.0/fixtures/between/${ENDATEPAST}/${STARTDATE}`, {
@@ -51,12 +47,7 @@ async function getPastGameDetails() {
   return extractRelevantGameData(fixtures, true);
 }
 
-async function getFutureGameDetails(){
-  if(!(auth_utils.get_curr_user_login_permoission() instanceof classes.Union_Reps_Auth)){
-    console.log(false);
-    return;
-  }
-  console.log(true);
+async function getFutureGameDetailsFromAPI(){
   const fixtures = await axios.get(
     `https://soccer.sportmonks.com/api/v2.0/fixtures/between/${STARTDATE}/${ENDATEFUTURE}`,
     {
@@ -142,7 +133,7 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
             game_info["winner"] = fixtures.data.data[i].winner_team_id;
             await insert_events(events, game_info.date, fixtures.data.data[i].time.starting_at.time);
         } else {
-            game_info["winner"] = "none";
+            game_info["winner"] = `'"none"'`;
         }
         var query = `INSERT INTO dbo.games (${Object.keys(game_info)}) VALUES (${Object.values(game_info)})`
         await DButils.execQuery(
@@ -155,6 +146,27 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
     return list_of_info;
 };
 
+async function createNewLeague(name){
+    await DButils.execQuery(
+        `CREATE TABLE [dbo].[games_'${name}}'](
+            [id] [int]  NOT NULL PRIMARY KEY,
+            [date] [varchar] (30) NOT NULL,
+            [time] [varchar] (30) NOT NULL,
+            [league_name] [varchar](300) NOT NULL,
+            [home_team_name] [varchar](30) NOT NULL,
+            [away_team_name] [varchar](30) NOT NULL,
+            [referee] [varchar] (30),
+            [home_score] [int] NOT NULL,
+            [away_score] [int] NOT NULL,
+            [filed] [varchar] (30) NOT NULL,
+            [winner] [varchar] (30) NOT NULL,
+        );`
+    );
+
+}
+
+exports.createNewLeague = createNewLeague;
+// exports.addDetailsToLeague = addDetailsToLeague;
 exports.getLeagueDetails = getLeagueDetails;
 exports.getPastGameDetails = getPastGameDetails;
-exports.getFutureGameDetails = getFutureGameDetails;
+exports.getFutureGameDetailsFromAPI = getFutureGameDetailsFromAPI;

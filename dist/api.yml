@@ -98,7 +98,7 @@ paths:
                 $ref: '#/components/schemas/pastGame'
         "402":
           description: player not found
-  /displayfuturegames:
+  /league/getFutureGameFromAPI:
     get:
       tags:
       - games
@@ -169,6 +169,33 @@ paths:
                   $ref: '#/components/schemas/team'
         "404":
           description: teamId is not exists
+  /teams/getAllTeamsByCountry/:COUNTRY_ID:
+    get:
+      tags:
+        -user
+      summary: get All Teams By Country
+      description: return teams of the country by Represantative
+      parameters:
+      - name: username
+        in: path
+        description: users username
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 320
+      responses:
+        "200":
+          description: user found teams found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/team'
+        "404":
+          description: Country is not exists
   /league/getDetails:
     get:
       tags:
@@ -185,6 +212,26 @@ paths:
                   $ref: "#/components/schemas/League"
         "400":
           description: wrong input parameters
+  /league/addNewLeague:
+    post:
+      tags:
+      - admins
+      - league
+      summary: create new league
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/League'
+        required: true
+      responses:
+        "201":
+          description: ok created
+        "401":
+          description: league allready dosn't exist
+        "403":
+          description: user don't have permission
+
 components:
   schemas:
     userSignUp:
@@ -295,6 +342,9 @@ components:
         gusetTeam:
           type: string
           example: Arab F.C
+        referee:
+          type: string
+          example: yosef shouei
         filed:
           type: string
           example: Tedi
@@ -317,6 +367,9 @@ components:
         gusetTeam:
           type: string
           example: Arab F.C
+        referee:
+          type: string
+          example: yosef shouei
         filed:
           type: string
           example: Tedi

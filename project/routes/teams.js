@@ -43,10 +43,10 @@ router.get("/playerPreviewDetails/:playerId", async(req, res, next) => {
     }
 });
 
-router.get("/coachPreviewDetails/:coachId", async(req, res, next) => {
+router.get("/getAllTeamsByCountry/:COUNTRY_ID", async(req, res, next) => {
     try {
-        const coachDetails = await players_utils.getCoachesInfo([req.params.coachId], false);
-        res.send(coachDetails);
+        const teamsNames = await teams_utils.getAllTeamsByCountry(req.params.COUNTRY_ID);
+        res.send(teamsNames);
     } catch (error) {
         next(error);
     }

@@ -55,8 +55,8 @@ router.post("/Login", async (req, res, next) => {
     req.session.user_id = user.user_id;
 
     //user_login = new classes.Member_User(user.username, user.permissions);
-
     // console.log(auth_utils.updateRepresentativeLogin(user, req.body.password));
+    
     auth_utils.createMemeberUser(user);
 
     // return cookie

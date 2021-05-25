@@ -39,7 +39,6 @@ class Authorization {
 class Union_Reps_Auth extends Authorization {
     constructor() {
         super();
-
     }
 }
 class Fan extends Authorization {
