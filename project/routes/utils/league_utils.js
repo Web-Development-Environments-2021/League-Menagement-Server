@@ -6,8 +6,8 @@ const classes = require("../../classes");
 const LEAGUE_ID = 271;
 const today = new Date();
 const STARTDATE = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-const ENDATEFUTURE = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate() + 3);
-const ENDATEPAST = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate() - 3);
+const ENDATEFUTURE = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate() + 5);
+const ENDATEPAST = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate() - 5);
 
 async function getLeagueDetails() {
     const league = await axios.get(
@@ -36,7 +36,7 @@ async function getLeagueDetails() {
 //CurrentCycleGames
 
 
-async function getPastGameDetails() {
+async function getPastGameDetailsFromAPI() {
     const fixtures = await axios.get(
         `https://soccer.sportmonks.com/api/v2.0/fixtures/between/${ENDATEPAST}/${STARTDATE}`, {
             params: {
@@ -47,28 +47,52 @@ async function getPastGameDetails() {
         }
     );
 
-  //next game details should come from DB
-  return extractRelevantGameData(fixtures, true);
+    //next game details should come from DB
+    return extractRelevantGameData(fixtures, true);
 }
 
-async function getFutureGameDetails(){
-  if(!(auth_utils.get_curr_user_login_permoission() instanceof classes.Union_Reps_Auth)){
-    console.log(false);
-    return;
-  }
-  console.log(true);
-  const fixtures = await axios.get(
-    `https://soccer.sportmonks.com/api/v2.0/fixtures/between/${STARTDATE}/${ENDATEFUTURE}`,
-    {
-      params: {
-        leagues: LEAGUE_ID,
-        include: "venue, league, events.player",
-        api_token: process.env.api_token,
-      },
+async function getPastGameDetails() {
+    var query = `select * from dbo.games where date<convert(date,'${today.toISOString().slice(0, 19).replace('T', ' ')}',120)`
+    games_info = await DButils.execQuery(
+        query
+    );
+    return games_info;
+}
+async function getFutureGameDetails() {
+    var query = `select * from dbo.games where date>='${today.toISOString().slice(0, 19).replace('T', ' ')}'`
+    games_info = await DButils.execQuery(
+        query
+    );
+    return games_info;
+}
+async function insertNewGame(_date, _time, _league_name, _home_team_name, _away_team_name, _field) {
+    if (!(auth_utils.get_curr_user_login_permoission() instanceof classes.Union_Reps_Auth)) {
+        console.log(false);
+        return;
     }
-  );
-  // next game details should come from DB
-  return extractRelevantGameData(fixtures, false);
+    var query = `select max(id) from dbo.games`
+    max_id = await DButils.execQuery(
+        query
+    );
+    let game_info = {
+        id: String(parseInt(max_id[0]['']) + 1),
+        date: `'${_date + ' ' + _time}'`,
+        // time: `'${_time}'`,
+        league_name: `'${_league_name}'`,
+        home_team_name: `'${_home_team_name}'`,
+        away_team_name: `'${_away_team_name}'`,
+        home_score: -1,
+        away_score: -1,
+        field: `'${_field}'`,
+        winner: `'none'`
+
+    };
+    var query = `INSERT INTO dbo.games (${Object.keys(game_info)}) VALUES (${Object.values(game_info)})`
+    await DButils.execQuery(
+        query
+    );
+    // next game details should come from DB
+    return game_info;
 }
 async function insert_events(events, date, time) {
     for (let i = 0; i < 3; i++) {
@@ -127,22 +151,25 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
 
         game_info = {
             id: fixtures.data.data[i].id,
-            date: `'${fixtures.data.data[i].time.starting_at.date}'`,
-            time: `'${fixtures.data.data[i].time.starting_at.time}'`,
+            date: `'${fixtures.data.data[i].time.starting_at.date}'` + ' ' + `'${fixtures.data.data[i].time.starting_at.time}'`,
+            // time: `'${fixtures.data.data[i].time.starting_at.time}'`,
             league_name: `'${fixtures.data.data[i].league.data.name}'`,
             home_team_name: `'${home_team.data.data.name}'`,
             away_team_name: `'${away_team.data.data.name}'`,
             home_score: fixtures.data.data[i].scores.localteam_score,
             away_score: fixtures.data.data[i].scores.visitorteam_score,
-            filed: `'${fixtures.data.data[i].venue.data.name}'`,
+            field: `'${fixtures.data.data[i].venue.data.name}'`,
 
         };
         events = fixtures.data.data[i].events;
         if (isPastGame) {
             game_info["winner"] = fixtures.data.data[i].winner_team_id;
+            if (game_info["winner"] == null) {
+                game_info["winner"] = `'"Draw"'`;
+            }
             await insert_events(events, game_info.date, fixtures.data.data[i].time.starting_at.time);
         } else {
-            game_info["winner"] = "none";
+            game_info["winner"] = `'"none"'`;
         }
         var query = `INSERT INTO dbo.games (${Object.keys(game_info)}) VALUES (${Object.values(game_info)})`
         await DButils.execQuery(
@@ -158,3 +185,4 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
 exports.getLeagueDetails = getLeagueDetails;
 exports.getPastGameDetails = getPastGameDetails;
 exports.getFutureGameDetails = getFutureGameDetails;
+exports.insertNewGame = insertNewGame;

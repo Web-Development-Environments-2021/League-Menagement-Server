@@ -185,6 +185,22 @@ paths:
                   $ref: "#/components/schemas/League"
         "400":
           description: wrong input parameters
+  /league/insertNewGame:
+  get:
+    tags:
+      - league
+    summary: insert details for create new game
+    responses:
+      "200":
+        description: insert details to create future game, this endpoint can access only by the Representative
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/futureGame"
+      "400":
+        description: wrong input parameters 
 components:
   schemas:
     userSignUp:

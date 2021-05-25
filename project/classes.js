@@ -1,12 +1,12 @@
 class User {
-    constructor(username) {
+    set_username(username) {
         this.username = username;
     }
 }
 
 class Member_User extends User {
-    constructor(username, permission) {
-        super(username);
+
+    set_permissions(permission) {
         if (permission == "Fan") {
             this.permission = new Fan();
         } else if (permission == "Representative") {
