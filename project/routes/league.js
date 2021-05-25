@@ -3,13 +3,13 @@ var router = express.Router();
 const league_utils = require("./utils/league_utils");
 const auth_utils = require("./utils/auth_utils");
 
-router.get("/getDetails", async (req, res, next) => {
-  try {
-    const league_details = await league_utils.getLeagueDetails();
-    res.send(league_details);
-  } catch (error) {
-    next(error);
-  }
+router.get("/getDetails", async(req, res, next) => {
+    try {
+        const league_details = await league_utils.getLeagueDetails();
+        res.send(league_details);
+    } catch (error) {
+        next(error);
+    }
 });
 
 router.get("/getPastGame", async (req, res, next) => {
@@ -41,6 +41,15 @@ router.get("/getFutureGameFromAPI", async (req, res, next) => {
   }
 });
 
+router.get("/getFutureGame", async(req, res, next) => {
+  try {
+      const league_details = await league_utils.getFutureGameDetails();
+      res.send(league_details);
+  } catch (error) {
+      next(error);
+  }
+});
+
 router.post("/addNewLeague/:league_name", async (req, res, next) => {
   try {    
     const league = await league_utils.createNewLeague(req.body.league_name);
@@ -51,8 +60,18 @@ router.post("/addNewLeague/:league_name", async (req, res, next) => {
   }
 });
 
-module.exports = router;
+router.post("/insertNewGame/:date/:time/:league_name/:home_team_name/:away_team_name/:field", async(req, res, next) => {
+    try {
+        const new_game_details = await league_utils.insertNewGame(req.params.date,
+            req.params.time,
+            req.params.league_name,
+            req.params.home_team_name,
+            req.params.away_team_name,
+            req.params.field);
+        res.send(new_game_details);
+    } catch (error) {
+        next(error);
+    }
+});
 
-/*
-TODO: dsfdfsdfsfd
-*/
+module.exports = router;
