@@ -90,9 +90,9 @@ paths:
   /users/getFavoriteGame:
     get:
       tags:
-        -games
-        -league
-      respones:
+        - games
+        - league
+      responses:
         "200":
           description: ok
           content:
@@ -102,9 +102,9 @@ paths:
   /users/addFavoriteGame:
     post:
       tags:
-        -games
-        -league
-      respones:
+        - games
+        - league
+      responses:
         "200":
           description: ok
           content:
@@ -116,12 +116,6 @@ paths:
       tags:
       - games
       - league
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/futureGame'
-        required: true
       responses:
         "200":
           description: ok
@@ -131,7 +125,7 @@ paths:
                 $ref: '#/components/schemas/futureGame'
         "402":
           description: player not found
-  /league/getFutureGameFromAPI:
+  /league/getPastGameFromAPI:
     get:
       tags:
       - games
@@ -182,15 +176,15 @@ paths:
       description: return favorite teams of the user
       operationId: getMyTeams
       parameters:
-      - name: username
-        in: path
-        description: users username
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          example: shimon123
+        - name: teamId
+          in: path
+          description: teamId
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: shimon123
       responses:
         "200":
           description: user found teams found
@@ -202,14 +196,14 @@ paths:
                   $ref: '#/components/schemas/team'
         "404":
           description: teamId is not exists
-  /teams/getAllTeamsByCountry/:COUNTRY_ID:
+  /teams/getAllTeamsByCountry/{COUNTRY_ID}:
     get:
       tags:
-        -user
+        - user
       summary: get All Teams By Country
       description: return teams of the country by Represantative
       parameters:
-      - name: username
+      - name: COUNTRY_ID
         in: path
         description: users username
         required: true
@@ -470,8 +464,7 @@ components:
         players:
           type: array
           items:
-            type: object
-            $ref: "#/components/schemas/PlayerPreview"
+            $ref: "#/components/schemas/playerObject"
     search:
       type: object
       properties:
@@ -499,3 +492,7 @@ components:
           type: string
           description: current stage name
           example: Championship Round
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/shi67/fbs/1.0.0
