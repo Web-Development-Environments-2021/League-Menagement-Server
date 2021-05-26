@@ -1,13 +1,7 @@
 let express = require("express");
 let router = express.Router();
 const players_utils = require("./utils/players_utils");
-let object_to_search = "";
-
-// var url = "http://www.example.com/index.php?myParam=384&login=admin"; // or window.location.href for current url
-// var captured = /myParam=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
-// var result = captured ? captured : 'myDefaultValue';
-
-
+const teams_utils = require("./utils/team_utils");
 
 router.get("/players/:searchQuery", async(req, res, next) =>{
     try{
@@ -19,14 +13,15 @@ router.get("/players/:searchQuery", async(req, res, next) =>{
     }
 });
 
-// router.get("/teams/:searchQuery", async (req, res, next) =>{
-//     try{
-
-//     }
-//     catch(error){
-//         next(error);
-//     }
-// });
+router.get("/teams/:searchQuery", async (req, res, next) =>{
+    try{
+        const team_details = await teams_utils.searchTeamsInfoByName(req.params.searchQuery);
+        res.send(team_details);
+    }
+    catch(error){
+        next(error);
+    }
+});
 
 // router.use("/coaches", async (req, res, next) =>{
 //     try{

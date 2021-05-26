@@ -123,26 +123,25 @@ async function getTeamById(team_id) {
 
 async function serachForReleventPlayersInLeague(players_info){
     players = [];
-    players_info.map((player_info)=>{
-        if(!(player_info.data.data.team_id === null) && !(player_info.data.data.team.data.league === undefined)){
-            if(player_info.data.data.team.data.league.data.id == LEAGUE_ID){
-                // const { common_name, nationality, birthcountry, birthdate, height, weight ,image_path } = players_info;
-                // return {
-                //     common_name,
-                //     nationality,
-                //     birthcountry,
-                //     birthdate,
-                //     height,
-                //     weight,
-                //     image_path,
-                // };
-                // console.log(players_info.data.data);
-                // return (player_info);
-                players.push(player_info);
+    players_info.data.data.map((player_info)=>{
+        if(!(player_info.team_id === null) && !(player_info.team.data.league === undefined)){
+            if(player_info.team.data.league.data.id == LEAGUE_ID){
+                const { fullname, image_path, position_id } = player_info;
+                const name = player_info.team.data.name;
+                players.push( {
+                    name: fullname,
+                    image: image_path,
+                    position: position_id,
+                    team_name: name,
+                });
+                // console.log(player_info.team.data.league.data);
+                // // return (player_info);
+                // players.push(player_info);
             }
         }
     });
-    return extractRelevantPlayerOrCoachData(players, false);
+    return players;
+    // return extractRelevantPlayerOrCoachData(players, false);
 
 }
 
@@ -155,8 +154,6 @@ async function searchPlayersInfoByName(player_name){
     });
     const all_player_in_league =  serachForReleventPlayersInLeague(players_info);
     return all_player_in_league;
-    //extractFullPlayerData(all_player_in_league);
-    // console.log(players_info.data.data);
 }
 
 
