@@ -18,6 +18,8 @@ tags:
   description: Information about the teams
 - name: games
   description: Information about the gemes
+- name: league
+  description: Information about the league
 paths:
   /register:
     post:
@@ -84,18 +86,49 @@ paths:
               schema:
                 $ref: '#/components/schemas/cocahObject'
         "402":
-          description: coache not found
-  /displaypastgames:
+          description: coach not found
+  /users/getFavoriteGame:
+    get:
+      tags:
+        -games
+        -league
+      respones:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+  /users/addFavoriteGame:
+    post:
+      tags:
+        -games
+        -league
+      respones:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+  /league/getFutureGameFromAPI:
     get:
       tags:
       - games
+      - league
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/futureGame'
+        required: true
       responses:
         "200":
           description: ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/pastGame'
+                $ref: '#/components/schemas/futureGame'
         "402":
           description: player not found
   /league/getFutureGameFromAPI:
@@ -231,23 +264,22 @@ paths:
           description: league allready dosn't exist
         "403":
           description: user don't have permission
-
   /league/insertNewGame:
-  get:
-    tags:
-      - league
-    summary: insert details for create new game
-    responses:
-      "200":
-        description: insert details to create future game, this endpoint can access only by the Representative
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: "#/components/schemas/futureGame"
-      "400":
-        description: wrong input parameters 
+    get:
+      tags:
+        - league
+      summary: insert details for create new game
+      responses:
+        "200":
+          description: insert details to create future game, this endpoint can access only by the Representative
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/futureGame"
+        "400":
+          description: wrong input parameters 
 components:
   schemas:
     userSignUp:
@@ -343,6 +375,31 @@ components:
         playerposition:
           type: string
           example: choach
+    Game:
+      type: object
+      properties:
+        date:
+          type: string
+          example: 10 May 2021
+        time:
+          type: string
+          example: "1080"
+        hostTeam:
+          type: string
+          example: Beitar Jerusalem F.C.
+        gusetTeam:
+          type: string
+          example: Arab F.C
+        referee:
+          type: string
+          example: yosef shouei
+        filed:
+          type: string
+          example: Tedi
+        result:
+          example: Host 10 Guset 0
+        gamesSchedule:
+          example: 10 May 2021
     pastGame:
       type: object
       properties:

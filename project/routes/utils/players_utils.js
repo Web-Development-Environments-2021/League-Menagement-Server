@@ -1,6 +1,7 @@
 const axios = require("axios");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 // const TEAM_ID = "85";
+const LEAGUE_ID = 271;
 
 async function getPlayerIdsByTeam(team_id) {
     let player_ids_list = [];
@@ -36,7 +37,6 @@ async function getPlayersInfo(players_ids_list, isFull) {
             preview_info[i] = Object.assign({}, preview_info[i], fullInfo[i])
         }
     }
-
     return preview_info;
 }
 async function getCoachesInfo(coaches_ids_list, isFull) {
@@ -64,8 +64,9 @@ async function getCoachesInfo(coaches_ids_list, isFull) {
 }
 
 function extractFullPlayerData(players_info) {
+    console.log(players_info);
     return players_info.map((player_info) => {
-        const { common_name, nationality, birthcountry, birthdate, height, weight } = player_info.data.data;
+        const { common_name, nationality, birthcountry, birthdate, height, weight, image_path } = player_info.data.data;
         return {
             common_name,
             nationality,
@@ -73,6 +74,7 @@ function extractFullPlayerData(players_info) {
             birthdate,
             height,
             weight,
+            image_path,
         };
     });
 }
@@ -90,7 +92,6 @@ function extractFullCoachData(coaches_info) {
 }
 
 function extractRelevantPlayerOrCoachData(players_info, isCoach = false) {
-
     return players_info.map((player_info) => {
         const { fullname, image_path, position_id } = player_info.data.data;
         var name = '';
@@ -120,8 +121,47 @@ async function getTeamById(team_id) {
     return team.data.data.name;
 }
 
+async function serachForReleventPlayersInLeague(players_info){
+    players = [];
+    players_info.map((player_info)=>{
+        if(!(player_info.data.data.team_id === null) && !(player_info.data.data.team.data.league === undefined)){
+            if(player_info.data.data.team.data.league.data.id == LEAGUE_ID){
+                // const { common_name, nationality, birthcountry, birthdate, height, weight ,image_path } = players_info;
+                // return {
+                //     common_name,
+                //     nationality,
+                //     birthcountry,
+                //     birthdate,
+                //     height,
+                //     weight,
+                //     image_path,
+                // };
+                // console.log(players_info.data.data);
+                // return (player_info);
+                players.push(player_info);
+            }
+        }
+    });
+    return extractRelevantPlayerOrCoachData(players, false);
+
+}
+
+async function searchPlayersInfoByName(player_name){
+    const players_info = await axios.get(`${api_domain}/players/search/${player_name}`, {
+        params:{
+            include: "team.league",
+            api_token: process.env.api_token,
+        }
+    });
+    const all_player_in_league =  serachForReleventPlayersInLeague(players_info);
+    return all_player_in_league;
+    //extractFullPlayerData(all_player_in_league);
+    // console.log(players_info.data.data);
+}
 
 
+
+exports.searchPlayersInfoByName = searchPlayersInfoByName;
 exports.getPlayersByTeam = getPlayersByTeam;
 exports.getPlayersInfo = getPlayersInfo;
 exports.getCoachesInfo = getCoachesInfo;
