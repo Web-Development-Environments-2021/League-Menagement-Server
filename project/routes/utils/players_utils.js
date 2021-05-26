@@ -93,10 +93,13 @@ function extractFullCoachData(coaches_info) {
 
 function extractRelevantPlayerOrCoachData(players_info, isCoach = false) {
     return players_info.map((player_info) => {
-        const { fullname, image_path, position_id } = player_info.data.data;
+        if (player_info.fullname == undefined) {
+            player_info = player_info.data.data;
+        }
+        const { fullname, image_path, position_id } = player_info;
         var name = '';
         if (!isCoach) {
-            name = player_info.data.data.team.data.name;
+            name = player_info.team.data.name;
         }
         return {
             name: fullname,
@@ -121,11 +124,11 @@ async function getTeamById(team_id) {
     return team.data.data.name;
 }
 
-async function serachForReleventPlayersInLeague(players_info){
+async function serachForReleventPlayersInLeague(players_info) {
     players = [];
-    players_info.map((player_info)=>{
-        if(!(player_info.data.data.team_id === null) && !(player_info.data.data.team.data.league === undefined)){
-            if(player_info.data.data.team.data.league.data.id == LEAGUE_ID){
+    players_info.map((player_info) => {
+        if (!(player_info.team_id === null) && !(player_info.team.data.league === undefined)) {
+            if (player_info.team.data.league.data.id == LEAGUE_ID) {
                 // const { common_name, nationality, birthcountry, birthdate, height, weight ,image_path } = players_info;
                 // return {
                 //     common_name,
@@ -146,14 +149,14 @@ async function serachForReleventPlayersInLeague(players_info){
 
 }
 
-async function searchPlayersInfoByName(player_name){
+async function searchPlayersInfoByName(player_name) {
     const players_info = await axios.get(`${api_domain}/players/search/${player_name}`, {
-        params:{
+        params: {
             include: "team.league",
             api_token: process.env.api_token,
         }
     });
-    const all_player_in_league =  serachForReleventPlayersInLeague(players_info);
+    const all_player_in_league = serachForReleventPlayersInLeague(players_info.data.data);
     return all_player_in_league;
     //extractFullPlayerData(all_player_in_league);
     // console.log(players_info.data.data);
