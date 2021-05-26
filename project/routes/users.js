@@ -3,55 +3,51 @@ var router = express.Router();
 const DButils = require("./utils/DButils");
 const users_utils = require("./utils/users_utils");
 const players_utils = require("./utils/players_utils");
+const league_utils = require("./utils/league_utils");
 
 /**
  * Authenticate all incoming requests by middleware
  */
-router.use(async function (req, res, next) {
-  if (req.session && req.session.user_id) {
-    DButils.execQuery("SELECT user_id FROM users")
-      .then((users) => {
-        if (users.find((x) => x.user_id === req.session.user_id)) {
-          req.user_id = req.session.user_id;
-          next();
-        }
-      })
-      .catch((err) => next(err));
-  } else {
-    res.sendStatus(401);
-  }
-});
-
-/**
- * This path gets body with playerId and save this player in the favorites list of the logged-in user
- */
-router.post("/favoritePlayers", async (req, res, next) => {
-  try {
-    const user_id = req.session.user_id;
-    const player_id = req.body.playerId;
-    await users_utils.markPlayerAsFavorite(user_id, player_id);
-    res.status(201).send("The player successfully saved as favorite");
-  } catch (error) {
-    next(error);
-  }
+router.use(async function(req, res, next) {
+    if (req.session && req.session.user_id) {
+        DButils.execQuery("SELECT user_id FROM users")
+            .then((users) => {
+                if (users.find((x) => x.user_id === req.session.user_id)) {
+                    req.user_id = req.session.user_id;
+                    next();
+                }
+            })
+            .catch((err) => next(err));
+    } else {
+        res.sendStatus(401);
+    }
 });
 
 /**
  * This path returns the favorites players that were saved by the logged-in user
  */
-router.get("/favoritePlayers", async (req, res, next) => {
-  try {
-    const user_id = req.session.user_id;
-    let favorite_players = {};
-    const player_ids = await users_utils.getFavoritePlayers(user_id);
-    let player_ids_array = [];
-    player_ids.map((element) => player_ids_array.push(element.player_id)); //extracting the players ids into array
-    const results = await players_utils.getPlayersInfo(player_ids_array);
-    res.status(200).send(results);
-  } catch (error) {
-    next(error);
-  }
+router.get("/getFavoriteGames", async(req, res, next) => {
+    try {
+        const user_id = req.session.user_id;
+        const game_ids = await users_utils.getFavoriteGames(user_id);
+        let game_ids_array = [];
+        game_ids.map((element) => game_ids_array.push(element.game_id));
+        const results = await league_utils.getGameDetailsById(game_ids_array);
+        res.status(200).send(results);
+    } catch (error) {
+        next(error);
+    }
 });
 
+router.post("/addFavoriteGames", async(req, res, next) => {
+    try {
+        const user_id = req.session.user_id;
+        const game_id = req.body.game_id;
+        const status = await users_utils.markGameAsFavorite(user_id, game_id);
+        res.status(201).send(status);
+    } catch (error) {
+        next(error);
+    }
+});
 
 module.exports = router;

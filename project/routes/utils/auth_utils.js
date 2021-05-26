@@ -9,19 +9,18 @@ const DButils = require("../utils/DButils");
 
 // function createMemeberUser (user){
 //     // if((user.permissions == "Representative") && (reps.RepresentativePermission() == "undefined")){
-        
+
 //     // }
 //     user_login = new classes.Member_User(user.username, user.permissions);    
 // }
 
-const get_curr_user_login_permoission = ()=>{
-    if((user_login.permission instanceof classes.Union_Reps_Auth)){
+const get_curr_user_login_permoission = () => {
+    if ((user_login.permission instanceof classes.Union_Reps_Auth)) {
         return true;
-      }
-      else{
-        return false; 
-      }
-//     return permission;
+    } else {
+        return false;
+    }
+    //     return permission;
 };
 async function register(req, res, next) {
     const users = await DButils.execQuery(
@@ -38,9 +37,17 @@ async function register(req, res, next) {
     );
     req.body.password = hash_password;
 
+    var query0 = `select max(user_id) from dbo.users`
+    max_id = await DButils.execQuery(
+        query0
+    );
+    var id = 0;
+    if (max_id.length > 0) {
+        var id = String(parseInt(max_id[0]['']) + 1);
+    }
     // add the new username
     await DButils.execQuery(
-        `INSERT INTO dbo.users (username, password, permissions) VALUES ('${req.body.username}', '${hash_password}', 'Fan')`
+        `INSERT INTO dbo.users (user_id, username, password, permissions) VALUES (${id}, '${req.body.username}', '${hash_password}', 'Fan')`
     );
 }
 async function Login(req, res) {

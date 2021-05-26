@@ -4,8 +4,7 @@ GO
 
 CREATE TABLE [dbo].[events_schedule](
 	[events_scheduleID] [bigint] NOT NULL,
-	[date] [varchar](30) NOT NULL,
-	[time] [varchar](30) NOT NULL,
+	[date] [smalldatetime] NOT NULL,
 	[minute] [int] NOT NULL,
 	[extra_minute] [int] NULL,
 	[player_id] [int] NOT NULL,
@@ -18,13 +17,12 @@ GO
 
 CREATE TABLE [dbo].[games](
     [id] [bigint]  NOT NULL PRIMARY KEY,
-	[date] [DATE] NOT NULL,
-	[time] [TIME] (5) NOT NULL,
+	[date] [smalldatetime] NOT NULL,
 	[league_name] [varchar](300) NOT NULL,
     [home_team_name] [varchar](30) NOT NULL,
     [away_team_name] [varchar](30) NOT NULL,
     [home_score] [int] NOT NULL,
     [away_score] [int] NOT NULL,
     [field] [varchar] (30) NOT NULL,
-    [winner] [varchar] (30) NOT NULL,
+    [winner] [varchar] (30) NULL,
 );
