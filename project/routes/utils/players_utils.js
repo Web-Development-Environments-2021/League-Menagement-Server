@@ -145,7 +145,8 @@ async function serachForReleventPlayersInLeague(players_info) {
             }
         }
     });
-    return extractRelevantPlayerOrCoachData(players, false);
+    return players;
+    // return extractRelevantPlayerOrCoachData(players, false);
 
 }
 
@@ -158,8 +159,6 @@ async function searchPlayersInfoByName(player_name) {
     });
     const all_player_in_league = serachForReleventPlayersInLeague(players_info.data.data);
     return all_player_in_league;
-    //extractFullPlayerData(all_player_in_league);
-    // console.log(players_info.data.data);
 }
 
 
