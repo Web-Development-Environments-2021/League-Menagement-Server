@@ -50,15 +50,28 @@ async function getPastGameDetailsFromAPI() {
     return extractRelevantGameData(fixtures, true);
 }
 
-async function getFutureGameDetailsFromAPI(){
+async function getGameDetailsById(game_id_list) {
+    var query = '';
+    if (game_id_list.length == 0) {
+        query = `select * from dbo.games where id in (-1);`;
+    } else {
+        query = `select * from dbo.games where id in (${game_id_list});`;
+    }
+    games_info = await DButils.execQuery(
+        query
+    );
+    return games_info;
+}
+
+async function getFutureGameDetailsFromAPI() {
     const fixtures = await axios.get(
         `https://soccer.sportmonks.com/api/v2.0/fixtures/between/${STARTDATE}/${ENDATEFUTURE}`, {
-        params: {
-            leagues: LEAGUE_ID,
-            include: "venue, league, events.player",
-            api_token: process.env.api_token,
-        },
-    }
+            params: {
+                leagues: LEAGUE_ID,
+                include: "venue, league, events.player",
+                api_token: process.env.api_token,
+            },
+        }
     );
     //next game details should come from DB
     return extractRelevantGameData(fixtures, true);
@@ -90,7 +103,6 @@ async function insertNewGame(_date, _time, _league_name, _home_team_name, _away_
     let game_info = {
         id: String(parseInt(max_id[0]['']) + 1),
         date: `'${_date + ' ' + _time}'`,
-        // time: `'${_time}'`,
         league_name: `'${_league_name}'`,
         home_team_name: `'${_home_team_name}'`,
         away_team_name: `'${_away_team_name}'`,
@@ -120,8 +132,8 @@ async function insert_events(events, date, time) {
         var new_time = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
         event_info = {
             events_scheduleID: id,
-            date: date,
-            time: `'${new_time}'`,
+            date: `'${date +' '+ new_time}'`,
+            // time: `'${new_time}'`,
             minute: minute,
             extra_minute: extra_minute,
             player_id: player.data.player_id,
@@ -164,7 +176,7 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
 
         game_info = {
             id: fixtures.data.data[i].id,
-            date: `'${fixtures.data.data[i].time.starting_at.date}'` + ' ' + `'${fixtures.data.data[i].time.starting_at.time}'`,
+            date: `'${fixtures.data.data[i].time.starting_at.date + ' ' + fixtures.data.data[i].time.starting_at.time}'`,
             // time: `'${fixtures.data.data[i].time.starting_at.time}'`,
             league_name: `'${fixtures.data.data[i].league.data.name}'`,
             home_team_name: `'${home_team.data.data.name}'`,
@@ -180,7 +192,7 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
             if (game_info["winner"] == null) {
                 game_info["winner"] = `'"Draw"'`;
             }
-            await insert_events(events, game_info.date, fixtures.data.data[i].time.starting_at.time);
+            await insert_events(events, fixtures.data.data[i].time.starting_at.date, fixtures.data.data[i].time.starting_at.time);
         } else {
             game_info["winner"] = `'"none"'`;
         }
@@ -195,7 +207,7 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
     return list_of_info;
 };
 
-async function createNewLeague(name){
+async function createNewLeague(name) {
     await DButils.execQuery(
         `CREATE TABLE [dbo].[games_'${name}}'](
             [id] [int]  NOT NULL PRIMARY KEY,
@@ -222,3 +234,4 @@ exports.getPastGameDetailsFromAPI = getPastGameDetailsFromAPI;
 exports.getFutureGameDetailsFromAPI = getFutureGameDetailsFromAPI;
 exports.getFutureGameDetails = getFutureGameDetails;
 exports.insertNewGame = insertNewGame;
+exports.getGameDetailsById = getGameDetailsById;

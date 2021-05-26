@@ -3,12 +3,11 @@ let router = express.Router();
 const players_utils = require("./utils/players_utils");
 const teams_utils = require("./utils/team_utils");
 
-router.get("/players/:searchQuery", async(req, res, next) =>{
-    try{
+router.get("/players/:searchQuery", async(req, res, next) => {
+    try {
         const player_details = await players_utils.searchPlayersInfoByName(req.params.searchQuery);
         res.send(player_details);
-    }
-    catch(error){
+    } catch (error) {
         next(error);
     }
 });
