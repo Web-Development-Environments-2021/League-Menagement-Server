@@ -18,19 +18,8 @@ router.get("/teams/:searchQuery", async (req, res, next) =>{
         res.send(team_details);
     }
     catch(error){
-        next(error);
+        res.status(500).send('Team not found!')    
     }
 });
-
-// router.use("/coaches", async (req, res, next) =>{
-//     try{
-//     const coach_details = await players_utils.getCoachesInfo();
-//     res.send(coach_details);
-//     }
-//     catch(error){
-//         next(error);
-//     }
-// });
-
 
 module.exports = router;

@@ -129,24 +129,11 @@ async function serachForReleventPlayersInLeague(players_info) {
     players_info.map((player_info) => {
         if (!(player_info.team_id === null) && !(player_info.team.data.league === undefined)) {
             if (player_info.team.data.league.data.id == LEAGUE_ID) {
-                // const { common_name, nationality, birthcountry, birthdate, height, weight ,image_path } = players_info;
-                // return {
-                //     common_name,
-                //     nationality,
-                //     birthcountry,
-                //     birthdate,
-                //     height,
-                //     weight,
-                //     image_path,
-                // };
-                // console.log(players_info.data.data);
-                // return (player_info);
                 players.push(player_info);
             }
         }
     });
-    return players;
-    // return extractRelevantPlayerOrCoachData(players, false);
+    return extractRelevantPlayerOrCoachData(players, false);
 
 }
 

@@ -46,8 +46,9 @@ async function searchTeamsInfoByName(TEAM_NAME){
       }
     }
   );
-  if(teams_info.data.data[0].league.data.id ==LEAGUE_ID){
-      error("team not found"); 
+  console.log(teams_info.data.data.league);
+  if((teams_info.data.data.league == undefined) || (teams_info.data.data[0].league.data.id !=LEAGUE_ID)){
+      throw error("Team not found"); 
   }
   const {name, logo_path} = teams_info.data.data[0];
   return {
