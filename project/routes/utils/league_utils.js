@@ -92,10 +92,10 @@ async function getFutureGameDetails() {
     return games_info;
 }
 async function insertNewGame(_date, _time, _league_name, _home_team_name, _away_team_name, _field) {
-    if (!(auth_utils.get_curr_user_login_permoission() instanceof classes.Union_Reps_Auth)) {
-        console.log(false);
-        return;
-    }
+    // if (!(auth_utils.get_curr_user_login_permoission() instanceof classes.Union_Reps_Auth)) {
+    //     console.log(false);
+    //     return;
+    // }
     var query = `select max(id) from dbo.games`
     max_id = await DButils.execQuery(
         query

@@ -17,6 +17,15 @@ router.get("/teamFullDetails/:teamId", async(req, res, next) => {
     }
 });
 
+router.get("/playerPreviewDetails/:playerId", async(req, res, next) => {
+    try {
+        const playerDetails = await players_utils.getPlayersInfo([req.params.playerId], false);
+        res.send(playerDetails);
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.get("/playerFullDetails/:playerId", async(req, res, next) => {
     try {
         const playerDetails = await players_utils.getPlayersInfo([req.params.playerId], true);
@@ -26,18 +35,19 @@ router.get("/playerFullDetails/:playerId", async(req, res, next) => {
     }
 });
 
-router.get("/coachFullDetails/:coachId", async(req, res, next) => {
+router.get("/coachPreviewDetails/:coachId", async(req, res, next) => {
     try {
-        const coachDetails = await players_utils.getCoachesInfo([req.params.coachId], true);
+        const coachDetails = await players_utils.getCoachesInfo([req.params.playerId], false);
         res.send(coachDetails);
     } catch (error) {
         next(error);
     }
 });
-router.get("/playerPreviewDetails/:playerId", async(req, res, next) => {
+
+router.get("/coachFullDetails/:coachId", async(req, res, next) => {
     try {
-        const playerDetails = await players_utils.getPlayersInfo([req.params.playerId], false);
-        res.send(playerDetails);
+        const coachDetails = await players_utils.getCoachesInfo([req.params.coachId], true);
+        res.send(coachDetails);
     } catch (error) {
         next(error);
     }

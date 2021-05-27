@@ -61,20 +61,33 @@ paths:
       responses:
         "200":
           description: "the user has ben successfully logged out"
-  /prescreenplayer:
+  /playerPreviewDetails/:playerId:
     get:
       tags:
       - players
       responses:
         "200":
-          description: ok
+          description: short display of player
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/playerObject'
         "402":
           description: player not found
-  /prescreencocah:
+  /getAllTeamsByCountry/:COUNTRY_ID:
+    get:
+      tags:
+      - teams
+      responses:
+        "200":
+          description: find all teams by their country
+          content:
+            application/json:
+              schema:
+                $ref: '??'
+        "402":
+          description: player not found
+  /coachPreviewDetails/:coachId:
     get:
       tags:
       - coaches
@@ -87,19 +100,45 @@ paths:
                 $ref: '#/components/schemas/cocahObject'
         "402":
           description: coach not found
-  /users/getFavoriteGame:
+  /teams/teamFullDetails/{teamId}: 
+    get:
+      tags:
+      - teams
+      description: return full details of team
+      operationId: getMyTeams
+      parameters:
+        - name: teamId
+          in: path
+          description: team id
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 123434
+      responses:
+        "200":
+          description: team found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/team'
+        "404":
+          description: teamId is not exists
+  /users/getFavoriteGames:
     get:
       tags:
         - games
-        - league
       responses:
         "200":
-          description: ok
+          description: games found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Game'
-  /users/addFavoriteGame:
+  /users/addFavoriteGames:
     post:
       tags:
         - games
@@ -111,7 +150,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Game'
-  /league/getFutureGameFromAPI:
+  /league/add&getRandFutureGames:
+    get:
+      tags:
+      - games
+      - league
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/futureGame'
+  /league/getPastGame:
+    get:
+      tags:
+      - games
+      - league
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pastGame'
+        "402":
+          description: no game in the past
+  /league/getFutureGame:
     get:
       tags:
       - games
@@ -124,21 +189,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/futureGame'
         "402":
-          description: player not found
-  /league/getPastGameFromAPI:
-    get:
-      tags:
-      - games
-      responses:
-        "200":
-          description: ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/futureGame'
-        "402":
-          description: player not found
-  /search/{search}:
+          description: no game in the future
+  /search/player/{searchQuery}:
     get:
       tags:
       - team
@@ -147,7 +199,7 @@ paths:
       summary: returns list of search result (team\player\match)
       operationId: search
       parameters:
-      - name: search
+      - name: searchQuery
         in: path
         description: free text for search
         required: true
@@ -168,61 +220,6 @@ paths:
           description: nothing found
         "400":
           description: bad input parameter
-  /teams/teamFullDetails/{teamId}: 
-    get:
-      tags:
-      - user
-      summary: favorite team
-      description: return favorite teams of the user
-      operationId: getMyTeams
-      parameters:
-        - name: teamId
-          in: path
-          description: teamId
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: shimon123
-      responses:
-        "200":
-          description: user found teams found
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/team'
-        "404":
-          description: teamId is not exists
-  /teams/getAllTeamsByCountry/{COUNTRY_ID}:
-    get:
-      tags:
-        - user
-      summary: get All Teams By Country
-      description: return teams of the country by Represantative
-      parameters:
-      - name: COUNTRY_ID
-        in: path
-        description: users username
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          example: 320
-      responses:
-        "200":
-          description: user found teams found
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/team'
-        "404":
-          description: Country is not exists
   /league/getDetails:
     get:
       tags:
@@ -239,7 +236,7 @@ paths:
                   $ref: "#/components/schemas/League"
         "400":
           description: wrong input parameters
-  /league/addNewLeague:
+  /league/addNewLeague/:league_name:
     post:
       tags:
       - admins
@@ -257,12 +254,67 @@ paths:
         "401":
           description: league allready dosn't exist
         "403":
-          description: user don't have permission
-  /league/insertNewGame:
+          description: user doesn't have permission
+  /insertNewGame/{date}/{time}/{league_name}/{home_team_name}/{away_team_name}/{field}:
     get:
       tags:
         - league
       summary: insert details for create new game
+      parameters:
+        - name: date
+          in: path
+          description: date
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 2021-08-12
+        - name: time
+          in: path
+          description: time
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 16:00:00
+        - name: league_name
+          in: path
+          description: league_name
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: superleague
+        - name: home_team_name
+          in: path
+          description: home_team_name
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: Midtjylland
+        - name: away_team_name
+          in: path
+          description: away_team_name
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: Midtjylland
+        - name: field
+          in: path
+          description: field
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: Meadowbank Dorking
       responses:
         "200":
           description: insert details to create future game, this endpoint can access only by the Representative

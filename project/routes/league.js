@@ -12,19 +12,20 @@ router.get("/getDetails", async(req, res, next) => {
     }
 });
 
-router.get("/getPastGameFromAPI", async(req, res, next) => {
-    try {
-        const game_details = await league_utils.getPastGameDetailsFromAPI();
-        res.send(game_details);
-    } catch (error) {
-        next(error);
-    }
-});
+
 
 router.get("/getPastGame", async(req, res, next) => {
     try {
         const game_details = await league_utils.getPastGameDetails();
         res.send(game_details);
+    } catch (error) {
+        next(error);
+    }
+});
+router.get("/getFutureGame", async(req, res, next) => {
+    try {
+        const league_details = await league_utils.getFutureGameDetails();
+        res.send(league_details);
     } catch (error) {
         next(error);
     }
@@ -40,7 +41,7 @@ router.use("", async function(req, res, next) {
     }
 });
 
-router.get("/getFutureGameFromAPI", async(req, res, next) => {
+router.get("/add&getRandFutureGames", async(req, res, next) => {
     try {
         const game_details = await league_utils.getFutureGameDetailsFromAPI();
         res.send(game_details);
@@ -49,14 +50,14 @@ router.get("/getFutureGameFromAPI", async(req, res, next) => {
     }
 });
 
-router.get("/getFutureGame", async(req, res, next) => {
-    try {
-        const league_details = await league_utils.getFutureGameDetails();
-        res.send(league_details);
-    } catch (error) {
-        next(error);
-    }
-});
+// router.get("/add&getRandPastGames", async(req, res, next) => {
+//     try {
+//         const game_details = await league_utils.getPastGameDetailsFromAPI();
+//         res.send(game_details);
+//     } catch (error) {
+//         next(error);
+//     }
+// });
 
 router.post("/addNewLeague/:league_name", async(req, res, next) => {
     try {
