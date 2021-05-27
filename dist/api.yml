@@ -339,6 +339,116 @@ paths:
                   $ref: "#/components/schemas/futureGame"
         "400":
           description: wrong input parameters 
+    /search/players/{searchQuery}:
+    get:
+      tags:
+      - players
+      summary: search for player by subset string of his name
+      parameters:
+        - name: searchQuery
+          in: path
+          description: subset string of the player name
+          required: true
+          schema: 
+            type: string
+            example: johan
+      responses:
+        "200":
+          description: player found
+          content:
+            aplication/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/playerObject'
+        "400":
+          description: player not found
+  /search/teams/{searchQuery}:
+    get:
+        tags:
+        - teams
+        summary: search for team by her name
+        parameters:
+          - name: searchQuery
+            in: path
+            description: string of the team name
+            required: true
+            schema: 
+              type: string
+              example: Nordsjælland
+        responses:
+          "200":
+            description: team found
+            content:
+              aplication/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/team'
+          "400":
+            description: team not found
+  /search/players/{searchQuery}/filter/{positionName}:
+    get:
+      tags:
+      - players
+      summary: search for player by subset string of his name and filter with his position
+      parameters:
+        - name: searchQuery
+          in: path
+          description: subset string of the player name
+          required: true
+          schema: 
+            type: string
+            example: johan
+        - name: positionName
+          in: path
+          description: string of the player position
+          required: true
+          schema: 
+            type: string
+            example: Defender
+      responses:
+        "200":
+          description: player found and his position
+          content:
+            aplication/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/playerObject'
+        "400":
+          description: player not found
+  /search/players/{searchQuery}/filter/{teamName}:
+    get:
+      tags:
+      - players
+      summary: search for player by subset string of his name
+      parameters:
+        - name: searchQuery
+          in: path
+          description: subset string of the player name
+          required: true
+          schema: 
+            type: string
+            example: johan
+        - name: teamName
+          in: path
+          description: string of the player team name
+          required: true
+          schema: 
+            type: string
+            example: Nordsjælland
+      responses:
+        "200":
+          description: player found
+          content:
+            aplication/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/playerObject'
+        "400":
+          description: player not found
 components:
   schemas:
     userSignUp:
