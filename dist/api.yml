@@ -60,10 +60,20 @@ paths:
       responses:
         "200":
           description: "the user has ben successfully logged out"
-  /playerPreviewDetails/:playerId:
+  /playerPreviewDetails/{playerId}:
     get:
       tags:
       - player
+      parameters:
+        - name: playerId
+          in: path
+          description: playerId
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 123434
       responses:
         "200":
           description: short display of player
@@ -73,23 +83,66 @@ paths:
                 $ref: '#/components/schemas/playerObject'
         "402":
           description: player not found
-  /playerFullDetails/:playerId:
+  /playerFullDetails/{playerId}:
     get:
       tags:
       - player
+      parameters:
+        - name: playerId
+          in: path
+          description: playerId
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 123434
       responses:
         "200":
           description: full display of player
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/playerObject'
+                $ref: '#/components/schemas/playerFullObject'
         "402":
           description: player not found
-  /getAllTeamsByCountry/:COUNTRY_ID:
+  /coachFullDetails/{coachId}:
+    get:
+      tags:
+      - coach
+      parameters:
+        - name: coachId
+          in: path
+          description: coach Id
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 123434
+      responses:
+        "200":
+          description: full display of player
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/coachFullObject'
+        "402":
+          description: player not found
+  /getAllTeamsByCountry/{COUNTRY_ID}:
     get:
       tags:
       - teams
+      parameters:
+        - name: COUNTRY_ID
+          in: path
+          description: COUNTRY_ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 123434
       responses:
         "200":
           description: find all teams by their country
@@ -99,10 +152,20 @@ paths:
                 $ref: '??'
         "402":
           description: player not found
-  /coachPreviewDetails/:coachId:
+  /coachPreviewDetails/{coachId}:
     get:
       tags:
       - coache
+      parameters:
+        - name: coachId
+          in: path
+          description: coach Id
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 123434
       responses:
         "200":
           description: ok
@@ -444,13 +507,13 @@ components:
           type: string
           example: spain
         birthdate:
-          type: date
+          type: object
           example: 1997-12-23
         height:
-          type: float
+          type: object
           example: 1.8
         weight:
-          type: float
+          type: number
           example: 80
     cocahObject:
       type: object
@@ -464,7 +527,7 @@ components:
         teamname:
           type: string
           example: Beitar Jerusalem F.C.
-    cocahFullObject:
+    coachFullObject:
       type: object
       properties:
         image-url:
@@ -486,7 +549,7 @@ components:
           type: string
           example: spain
         birthdate:
-          type: date
+          type: object
           example: 1994-09-12
     Game:
       type: object
@@ -516,12 +579,9 @@ components:
     pastGame:
       type: object
       properties:
-        date:
-          type: string
-          example: 10 May 2021
         time:
-          type: string
-          example: "1080"
+          type: object
+          example: 16:00:00
         hostTeam:
           type: string
           example: Beitar Jerusalem F.C.
@@ -538,6 +598,7 @@ components:
           type: string
           example: Midtjylland
         date:
+          type: object
           example: 2021-12-12
     futureGame:
       type: object
