@@ -4,19 +4,17 @@ info:
   description: This is a simple API
   version: 1.0.0
 tags:
-- name: admins
+- name: admin
   description: Secured Admin-only calls
-- name: users
+- name: user
   description: Information about the users
-- name: developers
-  description: Operations available to regular developers
-- name: players
+- name: player
   description: Information about the players
-- name: coaches
+- name: coache
   description: Information about the coaches
-- name: teams
+- name: team
   description: Information about the teams
-- name: games
+- name: game
   description: Information about the gemes
 - name: league
   description: Information about the league
@@ -24,7 +22,7 @@ paths:
   /register:
     post:
       tags:
-      - admins
+      - user
       summary: this is the register
       requestBody:
         content:
@@ -38,7 +36,8 @@ paths:
   /login:
     post:
       tags:
-      - admins
+      - admin
+      - user
       summary: this is the login
       requestBody:
         content:
@@ -64,10 +63,23 @@ paths:
   /playerPreviewDetails/:playerId:
     get:
       tags:
-      - players
+      - player
       responses:
         "200":
           description: short display of player
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/playerObject'
+        "402":
+          description: player not found
+  /playerFullDetails/:playerId:
+    get:
+      tags:
+      - player
+      responses:
+        "200":
+          description: full display of player
           content:
             application/json:
               schema:
@@ -90,7 +102,7 @@ paths:
   /coachPreviewDetails/:coachId:
     get:
       tags:
-      - coaches
+      - coache
       responses:
         "200":
           description: ok
@@ -130,7 +142,8 @@ paths:
   /users/getFavoriteGames:
     get:
       tags:
-        - games
+        - game
+        - user
       responses:
         "200":
           description: games found
@@ -141,8 +154,8 @@ paths:
   /users/addFavoriteGames:
     post:
       tags:
-        - games
-        - league
+        - game
+        - user
       responses:
         "200":
           description: ok
@@ -153,8 +166,9 @@ paths:
   /league/add&getRandFutureGames:
     get:
       tags:
-      - games
+      - game
       - league
+      - admin
       responses:
         "200":
           description: ok
@@ -195,8 +209,7 @@ paths:
       tags:
       - team
       - player
-      - match
-      summary: returns list of search result (team\player\match)
+      summary: returns list of search result (team\player)
       operationId: search
       parameters:
       - name: searchQuery
@@ -239,7 +252,7 @@ paths:
   /league/addNewLeague/:league_name:
     post:
       tags:
-      - admins
+      - admin
       - league
       summary: create new league
       requestBody:
@@ -406,7 +419,7 @@ components:
         playerposition:
           type: string
           example: Goolkeeper
-    cocahObject:
+    playerFullObject:
       type: object
       properties:
         image-url:
@@ -420,7 +433,61 @@ components:
           example: Beitar Jerusalem F.C.
         playerposition:
           type: string
-          example: choach
+          example: Goolkeeper
+        common_name:
+          type: string
+          example: j.james
+        nationality:
+          type: string
+          example: belgium
+        birthcountry:
+          type: string
+          example: spain
+        birthdate:
+          type: date
+          example: 1997-12-23
+        height:
+          type: float
+          example: 1.8
+        weight:
+          type: float
+          example: 80
+    cocahObject:
+      type: object
+      properties:
+        image-url:
+          type: string
+          example: https://upload.wikimedia.org/wikipedia/he/3/3/BeitarJerusalemCrestStar2020.png
+        playername:
+          type: string
+          example: israel
+        teamname:
+          type: string
+          example: Beitar Jerusalem F.C.
+    cocahFullObject:
+      type: object
+      properties:
+        image-url:
+          type: string
+          example: https://upload.wikimedia.org/wikipedia/he/3/3/BeitarJerusalemCrestStar2020.png
+        playername:
+          type: string
+          example: israel
+        teamname:
+          type: string
+          example: Beitar Jerusalem F.C.
+        common_name:
+          type: string
+          example: j.james
+        nationality:
+          type: string
+          example: israel
+        birthcountry:
+          type: string
+          example: spain
+        birthdate:
+          type: date
+          example: 1994-09-12
     Game:
       type: object
       properties:
@@ -439,11 +506,11 @@ components:
         referee:
           type: string
           example: yosef shouei
-        filed:
+        field:
           type: string
-          example: Tedi
-        result:
-          example: Host 10 Guset 0
+          example: Meadowbank Dorking
+        winner:
+          example: Midtjylland
         gamesSchedule:
           example: 10 May 2021
     pastGame:
@@ -467,10 +534,11 @@ components:
         filed:
           type: string
           example: Tedi
-        result:
-          example: Host 10 Guset 0
-        gamesSchedule:
-          example: 10 May 2021
+        winner:
+          type: string
+          example: Midtjylland
+        date:
+          example: 2021-12-12
     futureGame:
       type: object
       properties:
