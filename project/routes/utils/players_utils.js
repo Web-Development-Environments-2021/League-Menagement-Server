@@ -124,8 +124,8 @@ async function getTeamById(team_id) {
     return team.data.data.name;
 }
 
-async function serachForReleventPlayersInLeague(players_info) {
-    players = [];
+function serachForReleventPlayersInLeague(players_info) {
+    const players = [];
     players_info.map((player_info) => {
         if (!(player_info.team_id === null) && !(player_info.team.data.league === undefined)) {
             if (player_info.team.data.league.data.id == LEAGUE_ID) {
@@ -133,23 +133,67 @@ async function serachForReleventPlayersInLeague(players_info) {
             }
         }
     });
-    return extractRelevantPlayerOrCoachData(players, false);
+    
+    return players; 
+ }
 
+async function getPlayersInfoByNameFromAPI(player_name, queryParams){
+    const players_info = await axios.get(`${api_domain}/players/search/${player_name}`, {
+        params: {
+            include: queryParams,
+            api_token: 'vf02QEv5ZgECAvLugpNvLqLNMo2yRYfXEUTelhXxgyxzBMAo6LCc5aWurQu1', //process.env.api_token,
+        }
+    });
+    return players_info;
+}
+
+function filterPlayersByPosition(all_players_in_league, positionName){
+    console.log(all_players_in_league);
+    let players = [];
+    all_players_in_league.map((player)=>{
+        if(player.position.data.name == positionName){
+            players.push(player);
+        }
+        console.log(player);
+    });
+    return players;
+}
+
+function filterPlayersByTeamName(all_players_in_league, teamName){
+    let players = [];
+    all_players_in_league.map((player)=>{
+        if(player.team.data.name == teamName){
+            players.push(player);
+        }
+    });
+    return players;
 }
 
 async function searchPlayersInfoByName(player_name) {
-    const players_info = await axios.get(`${api_domain}/players/search/${player_name}`, {
-        params: {
-            include: "team.league",
-            api_token: process.env.api_token,
-        }
-    });
-    const all_player_in_league = serachForReleventPlayersInLeague(players_info.data.data);
-    return all_player_in_league;
+    const players_info = await getPlayersInfoByNameFromAPI(player_name, "team.league");
+    const all_players_in_league = serachForReleventPlayersInLeague(players_info.data.data);
+    const relvent_player_data = (extractRelevantPlayerOrCoachData(all_players_in_league, false));
+    return relvent_player_data;
 }
 
+async function searchPlayersInfoByNameFilterByPosition(player_name,positionName){
+    const players_info = await getPlayersInfoByNameFromAPI (player_name, "team.league.id, position");
+    const all_players_in_league = serachForReleventPlayersInLeague(players_info.data.data);
+    const filterPlayers = filterPlayersByTeamName(all_players_in_league, positionName);
+    const relvent_player_data = extractRelevantPlayerOrCoachData(filterPlayers, false);
+    return relvent_player_data;
+}
 
+async function searchPlayersInfoByNameAndFilterByTeamName(searchPlayer, team_name){
+    const players_info =  await getPlayersInfoByNameFromAPI(player_name, "team.league.id");
+    const all_players_in_league = serachForReleventPlayersInLeague(players_info.data.data);
+    const filterPlayers = filterPlayersByPosition(all_players_in_league, positionName);
+    const relvent_player_data = extractRelevantPlayerOrCoachData(filterPlayers, false);
+    return relvent_player_data;
+}
 
+exports.searchPlayersInfoByNameFilterByPosition = searchPlayersInfoByNameFilterByPosition;
+exports.searchPlayersInfoByNameAndFilterByTeamName = searchPlayersInfoByNameAndFilterByTeamName;
 exports.searchPlayersInfoByName = searchPlayersInfoByName;
 exports.getPlayersByTeam = getPlayersByTeam;
 exports.getPlayersInfo = getPlayersInfo;
