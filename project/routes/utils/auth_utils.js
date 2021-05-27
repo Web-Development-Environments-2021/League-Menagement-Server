@@ -22,7 +22,7 @@ const get_curr_user_login_permoission = () => {
     }
     //     return permission;
 };
-async function register(req, res, next) {
+async function register(req) {
     const users = await DButils.execQuery(
         "SELECT username FROM dbo.users;"
     );

@@ -8,7 +8,7 @@ let user_login;
 
 router.post("/Register", async(req, res, next) => {
     try {
-        await auth_utils.register(req, res, next);
+        await auth_utils.register(req);
         res.status(201).send("user created");
     } catch (error) {
         next(error);

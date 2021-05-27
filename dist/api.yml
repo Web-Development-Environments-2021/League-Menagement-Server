@@ -402,7 +402,7 @@ paths:
                   $ref: "#/components/schemas/futureGame"
         "400":
           description: wrong input parameters 
-    /search/players/{searchQuery}:
+  /search/players/{searchQuery}:
     get:
       tags:
       - players
