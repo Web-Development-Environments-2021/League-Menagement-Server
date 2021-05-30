@@ -80,7 +80,7 @@ router.get("/getAllreferees", async (req, res, next) =>{
 
 router.post("/addReferee", async(req, res, next)=>{
     try{
-        const result = await league_details.addReferee(req.body.fisrt_name, req.body.last_name, req.body.qualification);
+        const result = await league_utils.addReferee(req.body.firstName, req.body.lastName, req.body.qualification);
         res.send(result);
     }catch(error){
         next(error);
@@ -97,7 +97,7 @@ router.post("/insertNewGame", async(req, res, next) => {
             req.body.home_team_name,
             req.body.away_team_name,
             req.body.field,
-            free_referee
+            req.body.referee
         );
         res.send(new_game_details);
     } catch (error) {

@@ -9,7 +9,7 @@ class Member_User extends User {
     set_permissions(permission) {
         if (permission == "Fan") {
             this.permission = new Fan();
-        } else if (permission == "Representative") {
+        } else if (permission == "representative") {
             this.permission = new Union_Reps_Auth();
         }
     }
