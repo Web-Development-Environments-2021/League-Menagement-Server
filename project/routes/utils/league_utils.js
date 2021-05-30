@@ -91,13 +91,13 @@ async function getFutureGameDetails() {
     );
     return games_info;
 }
-async function insertNewGame(_date, _time, _league_name, _home_team_name, _away_team_name, _field) {
+async function insertNewGame(_date, _time, _league_name, _home_team_name, _away_team_name, _field, _free_referee) {
     // if (!(auth_utils.get_curr_user_login_permoission() instanceof classes.Union_Reps_Auth)) {
     //     console.log(false);
     //     return;
     // }
     var query = `select max(id) from dbo.games`
-    max_id = await DButils.execQuery(
+    let max_id = await DButils.execQuery(
         query
     );
     let game_info = {
@@ -115,6 +115,7 @@ async function insertNewGame(_date, _time, _league_name, _home_team_name, _away_
     await DButils.execQuery(
         query
     );
+    await setRefereeToGameInDB(max_id + 1, _free_referee);
     // next game details should come from DB
     return game_info;
 }
@@ -225,8 +226,17 @@ async function createNewLeague(name) {
 
 }
 
+function setRefereeToGameInDB(last_game, free_referee){
+    // let last_game = DButils.execQuery(`SELECT max(id) FROM dbo.games`);
+    let all_referees = DButils.execQuery(`INSERT INTO dbo.refree_games (refree_id, game_id) VALUES (${free_referee},${last_game})`);    
+}
+
+async function getAllreferees(){
+    return await DButils.execQuery(`SELECT max(id) FROM dbo.refree`);
+}
+
 exports.createNewLeague = createNewLeague;
-// exports.addDetailsToLeague = addDetailsToLeague;
+exports.getAllreferees = getAllreferees;
 exports.getLeagueDetails = getLeagueDetails;
 exports.getPastGameDetails = getPastGameDetails;
 exports.getPastGameDetailsFromAPI = getPastGameDetailsFromAPI;
