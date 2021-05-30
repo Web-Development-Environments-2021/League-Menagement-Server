@@ -12,8 +12,6 @@ router.get("/getDetails", async(req, res, next) => {
     }
 });
 
-
-
 router.get("/getPastGame", async(req, res, next) => {
     try {
         const game_details = await league_utils.getPastGameDetails();
@@ -69,18 +67,31 @@ router.post("/addNewLeague/:league_name", async(req, res, next) => {
     }
 });
 
-router.post("/insertNewGame/:date/:time/:league_name/:home_team_name/:away_team_name/:field", async(req, res, next) => {
+router.get("/getAllreferees", async (req, res, next) =>{
+    const free_referee = await league_utils.getAllreferees();
+    return free_referees;
+})
+
+
+// router.post("/insertNewGame/:date/:time/:league_name/:home_team_name/:away_team_name/:field", async(req, res, next) => {
+router.post("/insertNewGame", async(req, res, next) => {
     try {
-        const new_game_details = await league_utils.insertNewGame(req.params.date,
-            req.params.time,
-            req.params.league_name,
-            req.params.home_team_name,
-            req.params.away_team_name,
-            req.params.field);
+        // const free_referee = await league_utils.getAllreferees();
+        const new_game_details = await league_utils.insertNewGame(
+            req.body.date,
+            req.body.time,
+            req.body.league_name,
+            req.body.home_team_name,
+            req.body.away_team_name,
+            req.body.field,
+            free_referee
+            );        
         res.send(new_game_details);
     } catch (error) {
         next(error);
     }
 });
+
+
 
 module.exports = router;

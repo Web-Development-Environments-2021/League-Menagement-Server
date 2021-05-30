@@ -60,20 +60,10 @@ paths:
       responses:
         "200":
           description: "the user has ben successfully logged out"
-  /playerPreviewDetails/{playerId}:
+  /playerPreviewDetails/:playerId:
     get:
       tags:
       - player
-      parameters:
-        - name: playerId
-          in: path
-          description: playerId
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 123434
       responses:
         "200":
           description: short display of player
@@ -83,66 +73,23 @@ paths:
                 $ref: '#/components/schemas/playerObject'
         "402":
           description: player not found
-  /playerFullDetails/{playerId}:
+  /playerFullDetails/:playerId:
     get:
       tags:
       - player
-      parameters:
-        - name: playerId
-          in: path
-          description: playerId
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 123434
       responses:
         "200":
           description: full display of player
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/playerFullObject'
+                $ref: '#/components/schemas/playerObject'
         "402":
           description: player not found
-  /coachFullDetails/{coachId}:
-    get:
-      tags:
-      - coach
-      parameters:
-        - name: coachId
-          in: path
-          description: coach Id
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 123434
-      responses:
-        "200":
-          description: full display of player
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/coachFullObject'
-        "402":
-          description: player not found
-  /getAllTeamsByCountry/{COUNTRY_ID}:
+  /getAllTeamsByCountry/:COUNTRY_ID:
     get:
       tags:
       - teams
-      parameters:
-        - name: COUNTRY_ID
-          in: path
-          description: COUNTRY_ID
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 123434
       responses:
         "200":
           description: find all teams by their country
@@ -152,20 +99,10 @@ paths:
                 $ref: '??'
         "402":
           description: player not found
-  /coachPreviewDetails/{coachId}:
+  /coachPreviewDetails/:coachId:
     get:
       tags:
       - coache
-      parameters:
-        - name: coachId
-          in: path
-          description: coach Id
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 123434
       responses:
         "200":
           description: ok
@@ -331,66 +268,17 @@ paths:
           description: league allready dosn't exist
         "403":
           description: user doesn't have permission
-  /insertNewGame/{date}/{time}/{league_name}/{home_team_name}/{away_team_name}/{field}:
-    get:
+  /league/insertNewGame/:
+    post:
       tags:
         - league
       summary: insert details for create new game
-      parameters:
-        - name: date
-          in: path
-          description: date
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 2021-08-12
-        - name: time
-          in: path
-          description: time
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: 16:00:00
-        - name: league_name
-          in: path
-          description: league_name
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: superleague
-        - name: home_team_name
-          in: path
-          description: home_team_name
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: Midtjylland
-        - name: away_team_name
-          in: path
-          description: away_team_name
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: Midtjylland
-        - name: field
-          in: path
-          description: field
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: Meadowbank Dorking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newGame'
       responses:
         "200":
           description: insert details to create future game, this endpoint can access only by the Representative
@@ -401,7 +289,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/futureGame"
         "400":
-          description: wrong input parameters 
+          description: wrong input parameters
   /search/players/{searchQuery}:
     get:
       tags:
@@ -617,13 +505,13 @@ components:
           type: string
           example: spain
         birthdate:
-          type: object
+          type: date
           example: 1997-12-23
         height:
-          type: object
+          type: float
           example: 1.8
         weight:
-          type: number
+          type: float
           example: 80
     cocahObject:
       type: object
@@ -637,7 +525,7 @@ components:
         teamname:
           type: string
           example: Beitar Jerusalem F.C.
-    coachFullObject:
+    cocahFullObject:
       type: object
       properties:
         image-url:
@@ -659,7 +547,7 @@ components:
           type: string
           example: spain
         birthdate:
-          type: object
+          type: date
           example: 1994-09-12
     Game:
       type: object
@@ -689,9 +577,12 @@ components:
     pastGame:
       type: object
       properties:
+        date:
+          type: string
+          example: 2021-12-12
         time:
-          type: object
-          example: 16:00:00
+          type: string
+          example: "1080"
         hostTeam:
           type: string
           example: Beitar Jerusalem F.C.
@@ -707,9 +598,6 @@ components:
         winner:
           type: string
           example: Midtjylland
-        date:
-          type: object
-          example: 2021-12-12
     futureGame:
       type: object
       properties:
@@ -783,6 +671,30 @@ components:
           type: string
           description: current stage name
           example: Championship Round
+    newGame:
+      type: object
+      properties:
+        date:
+          type: string
+          example: 2021-08-12
+        time:
+          type: string
+          example: 16:00:00
+        league_name:
+          type: string
+          example: superleague
+        home_team_name:
+          type: string
+          example: Midtjylland
+        away_team_name:
+          type: string
+          example: Midtjylland
+        field:
+          type: string
+          example: Meadowbank Dorking
+        referee:
+          type: string
+          example: Yosef Shoei
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking

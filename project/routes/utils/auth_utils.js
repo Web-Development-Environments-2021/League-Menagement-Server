@@ -47,7 +47,9 @@ async function register(req) {
     }
     // add the new username
     await DButils.execQuery(
-        `INSERT INTO dbo.users (user_id, username, password, permissions) VALUES (${id}, '${req.body.username}', '${hash_password}', 'Fan')`
+        `INSERT INTO dbo.users (user_id, username, password, permissions, first_name, last_name, country, email, image_user) 
+        VALUES (${id}, '${req.body.username}','${hash_password}', 'Fan', '${req.body.firstrname}','${req.body.lastrname}',
+        ${req.body.country}, '${req.body.email}','${req.body.image_url}')`
     );
 }
 async function Login(req, res) {
@@ -80,15 +82,8 @@ function createMemeberUser(user) {
 //     return user_login.permission;
 // }
 
-const canHaveRepresentativePermission = (user) => {
-    if (user.permission == "Representative") {
-        return new true();
-    }
-    return false;
-};
 
 exports.createMemeberUser = createMemeberUser;
-exports.canHaveRepresentativePermission = canHaveRepresentativePermission;
 exports.get_curr_user_login_permoission = get_curr_user_login_permoission;
 exports.register = register;
 exports.Login = Login;
