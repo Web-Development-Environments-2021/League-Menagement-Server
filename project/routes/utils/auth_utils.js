@@ -80,15 +80,8 @@ function createMemeberUser(user) {
 //     return user_login.permission;
 // }
 
-const canHaveRepresentativePermission = (user) => {
-    if (user.permission == "Representative") {
-        return new true();
-    }
-    return false;
-};
 
 exports.createMemeberUser = createMemeberUser;
-exports.canHaveRepresentativePermission = canHaveRepresentativePermission;
 exports.get_curr_user_login_permoission = get_curr_user_login_permoission;
 exports.register = register;
 exports.Login = Login;

@@ -110,7 +110,6 @@ async function insertNewGame(_date, _time, _league_name, _home_team_name, _away_
         away_score: -1,
         field: `'${_field}'`,
         winner: `'none'`
-
     };
     var query = `INSERT INTO dbo.games (${Object.keys(game_info)}) VALUES (${Object.values(game_info)})`
     await DButils.execQuery(
@@ -209,7 +208,7 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
 
 async function createNewLeague(name) {
     await DButils.execQuery(
-        `CREATE TABLE [dbo].[games_'${name}}'](
+        `CREATE TABLE [dbo].[games_'${name}'](
             [id] [int]  NOT NULL PRIMARY KEY,
             [date] [varchar] (30) NOT NULL,
             [time] [varchar] (30) NOT NULL,
