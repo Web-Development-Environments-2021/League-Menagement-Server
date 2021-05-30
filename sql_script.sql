@@ -59,3 +59,20 @@ CREATE TABLE [dbo].[games](
     [field] [varchar] (30) NOT NULL,
     [winner] [varchar] (30) NULL,
 );
+
+CREATE TABLE [dbo].[refree](
+    [user_id] [int]  NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES dbo.users(user_id),
+	[qualification][VARCHAR](30),
+);
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[refree_games]') AND type in (N'U'))
+DROP TABLE [dbo].[refree_games]
+GO
+
+CREATE TABLE [dbo].[refree_games](
+    [referee_id] [int]  NOT NULL FOREIGN KEY REFERENCES dbo.refree(user_id),
+	[game_id][bigint] NOT NULL FOREIGN KEY REFERENCES dbo.games(id),
+	PRIMARY KEY(referee_id,game_id),
+);
+
+DELETE from dbo.users WHERE user_id=0 or user_id = 1;
