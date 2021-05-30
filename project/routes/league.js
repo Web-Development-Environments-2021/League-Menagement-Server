@@ -98,7 +98,7 @@ router.post("/insertNewGame", async(req, res, next) => {
             req.body.away_team_name,
             req.body.field,
             free_referee
-            );        
+        );
         res.send(new_game_details);
     } catch (error) {
         next(error);

@@ -207,7 +207,7 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
 
 async function createNewLeague(name) {
     await DButils.execQuery(
-        `CREATE TABLE [dbo].[games_'${name}}'](
+        `CREATE TABLE [dbo].[games_'${name}'](
             [id] [int]  NOT NULL PRIMARY KEY,
             [date] [varchar] (30) NOT NULL,
             [time] [varchar] (30) NOT NULL,
