@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { DateTime } = require("mssql");
+const { resolve } = require("path");
 const DButils = require("../utils/DButils");
 
 const LEAGUE_ID = 271;
@@ -31,9 +32,6 @@ async function getLeagueDetails() {
         // next game details should come from DB
     };
 }
-
-//CurrentCycleGames
-
 
 async function getPastGameDetailsFromAPI() {
     const fixtures = await axios.get(
@@ -96,7 +94,7 @@ async function insertNewGame(_date, _time, _league_name, _home_team_name, _away_
     //     console.log(false);
     //     return;
     // }
-    var query = `select max(id) from dbo.games`
+    let query = `select max(id) from dbo.games`
     let max_id = await DButils.execQuery(
         query
     );
@@ -228,13 +226,27 @@ async function createNewLeague(name) {
 
 function setRefereeToGameInDB(last_game, free_referee){
     // let last_game = DButils.execQuery(`SELECT max(id) FROM dbo.games`);
-    let all_referees = DButils.execQuery(`INSERT INTO dbo.refree_games (refree_id, game_id) VALUES (${free_referee},${last_game})`);    
+    DButils.execQuery(`INSERT INTO dbo.refree_games (refree_id, game_id) VALUES (${free_referee},${last_game})`);    
 }
 
 async function getAllreferees(){
     return await DButils.execQuery(`SELECT max(id) FROM dbo.refree`);
 }
 
+async function addReferee(refereeFisrtame, refereeLastName,qualification){
+    const referee_id = await DButils.execQuery(
+        `SELECT user_id FROM dbo.users WHERE dbo.users.fisrt_name like ${refereeFisrtame} AND dbo.users.last_name like ${refereeLastName}`
+    );
+    const res = await insertNewRefereeToDB(referee_id,qualification);
+    return res;
+}
+
+async function insertNewRefereeToDB(referee_id, referee_qualification){    
+    let result =  await DButils.execQuery(`INSERT INTO (user_id, qualification) VALUES (${referee_id}, ${referee_qualification})`);
+    return result;
+}
+
+exports.addReferee = addReferee;
 exports.createNewLeague = createNewLeague;
 exports.getAllreferees = getAllreferees;
 exports.getLeagueDetails = getLeagueDetails;
