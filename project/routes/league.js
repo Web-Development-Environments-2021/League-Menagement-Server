@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const league_utils = require("./utils/league_utils");
 const auth_utils = require("./utils/auth_utils");
+const { classMethod } = require("@babel/types");
 
 router.get("/getDetails", async(req, res, next) => {
     try {
@@ -67,12 +68,24 @@ router.post("/addNewLeague/:league_name", async(req, res, next) => {
     }
 });
 
-router.get("/getAllreferees", async(req, res, next) => {
-    const free_referee = await league_utils.getAllreferees();
-    return free_referees;
+router.get("/getAllreferees", async (req, res, next) =>{
+    try{
+        const free_referee = await league_utils.getAllreferees();
+        res.send(free_referee);
+    }
+    catch(error){
+        next(error);
+    }    
 })
 
-
+router.post("/addReferee", async(req, res, next)=>{
+    try{
+        const result = await league_utils.addReferee(req.body.firstName, req.body.lastName, req.body.qualification);
+        res.send(result);
+    }catch(error){
+        next(error);
+    }
+})
 // router.post("/insertNewGame/:date/:time/:league_name/:home_team_name/:away_team_name/:field", async(req, res, next) => {
 router.post("/insertNewGame", async(req, res, next) => {
     try {
@@ -84,7 +97,7 @@ router.post("/insertNewGame", async(req, res, next) => {
             req.body.home_team_name,
             req.body.away_team_name,
             req.body.field,
-            free_referee
+            req.body.referee
         );
         res.send(new_game_details);
     } catch (error) {

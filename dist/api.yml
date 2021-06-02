@@ -18,6 +18,8 @@ tags:
   description: Information about the gemes
 - name: league
   description: Information about the league
+- name: referee
+  description: Information about the referee
 paths:
   /register:
     post:
@@ -204,6 +206,23 @@ paths:
                 $ref: '#/components/schemas/futureGame'
         "402":
           description: no game in the future
+  /league/addReferee:
+    post:
+      tags:
+      - league
+      - referee
+      summary: add new referee that he is allready a user in system. this can be exectuted only by the representative.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/refereeObject'
+      responses:
+        '201': 
+            description: ok created
+        '404':
+            description: bad inputs
   /search/player/{searchQuery}:
     get:
       tags:
@@ -549,6 +568,18 @@ components:
         birthdate:
           type: date
           example: 1994-09-12
+    refereeObject:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Yosef
+        lastName: 
+          type: string
+          example: Shouei
+        qualification:
+          type: string
+          example: runing
     Game:
       type: object
       properties:

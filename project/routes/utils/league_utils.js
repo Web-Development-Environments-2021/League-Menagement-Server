@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { DateTime } = require("mssql");
+const { resolve } = require("path");
 const DButils = require("../utils/DButils");
 
 const LEAGUE_ID = 271;
@@ -31,9 +32,6 @@ async function getLeagueDetails() {
         // next game details should come from DB
     };
 }
-
-//CurrentCycleGames
-
 
 async function getPastGameDetailsFromAPI() {
     const fixtures = await axios.get(
@@ -91,17 +89,18 @@ async function getFutureGameDetails() {
     );
     return games_info;
 }
-async function insertNewGame(_date, _time, _league_name, _home_team_name, _away_team_name, _field, _free_referee) {
+async function insertNewGame(_date, _time, _league_name, _home_team_name, _away_team_name, _field, _free_referee_id) {
     // if (!(auth_utils.get_curr_user_login_permoission() instanceof classes.Union_Reps_Auth)) {
     //     console.log(false);
     //     return;
     // }
-    var query = `select max(id) from dbo.games`
+    let query = `select max(id) from dbo.games`
     let max_id = await DButils.execQuery(
         query
     );
+    let str_max_id = String(parseInt(max_id[0]['']) + 1);
     let game_info = {
-        id: String(parseInt(max_id[0]['']) + 1),
+        id: str_max_id,
         date: `'${_date + ' ' + _time}'`,
         league_name: `'${_league_name}'`,
         home_team_name: `'${_home_team_name}'`,
@@ -111,11 +110,11 @@ async function insertNewGame(_date, _time, _league_name, _home_team_name, _away_
         field: `'${_field}'`,
         winner: `'none'`
     };
-    var query = `INSERT INTO dbo.games (${Object.keys(game_info)}) VALUES (${Object.values(game_info)})`
+    query = `INSERT INTO dbo.games (${Object.keys(game_info)}) VALUES (${Object.values(game_info)})`
     await DButils.execQuery(
         query
     );
-    await setRefereeToGameInDB(max_id + 1, _free_referee);
+    await setRefereeToGameInDB(str_max_id, _free_referee_id);
     // next game details should come from DB
     return game_info;
 }
@@ -226,15 +225,31 @@ async function createNewLeague(name) {
 
 }
 
-function setRefereeToGameInDB(last_game, free_referee){
-    // let last_game = DButils.execQuery(`SELECT max(id) FROM dbo.games`);
-    let all_referees = DButils.execQuery(`INSERT INTO dbo.refree_games (refree_id, game_id) VALUES (${free_referee},${last_game})`);    
+function setRefereeToGameInDB(last_game, free_referee_id){
+    DButils.execQuery(`INSERT INTO dbo.refree_games (referee_id, game_id) VALUES (${free_referee_id},${last_game})`);    
 }
 
 async function getAllreferees(){
     return await DButils.execQuery(`SELECT max(id) FROM dbo.refree`);
 }
 
+async function addReferee(refereeFisrtName, refereeLastName,qualification){
+    let query = `SELECT user_id FROM dbo.users WHERE first_name = '${refereeFisrtName}' AND last_name = '${refereeLastName}'`;
+    const referee_id = await DButils.execQuery(
+        query
+    );
+    const res = await insertNewRefereeToDB(referee_id[0].user_id,qualification);
+    return res;
+}
+
+async function insertNewRefereeToDB(referee_id, referee_qualification){ 
+    let query = `INSERT INTO dbo.refree (user_id, qualification) VALUES (${referee_id}, '${referee_qualification}')`;
+    let result =  await DButils.execQuery(
+        query);
+    return result;
+}
+
+exports.addReferee = addReferee;
 exports.createNewLeague = createNewLeague;
 exports.getAllreferees = getAllreferees;
 exports.getLeagueDetails = getLeagueDetails;
