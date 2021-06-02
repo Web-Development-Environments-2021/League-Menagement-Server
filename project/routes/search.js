@@ -38,11 +38,13 @@ router.get("/players/:searchQuery/filter/:TeamName", async(req, res, next)=>{
 
 router.get("/teams/:searchQuery", async (req, res, next) =>{
     try{
+        console.log(req.params.searchQuery);
         const team_details = await teams_utils.searchTeamsInfoByName(req.params.searchQuery);
         res.send(team_details);
     }
     catch(error){
-        res.status(500).send('Team not found!')    
+        next(error);
+        // res.status(500).send('Team not found!')    
     }
 });
 

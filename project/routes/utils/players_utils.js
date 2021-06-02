@@ -172,7 +172,7 @@ function filterPlayersByTeamName(all_players_in_league, teamName){
 async function searchPlayersInfoByName(player_name) {
     const players_info = await getPlayersInfoByNameFromAPI(player_name, "team.league");
     const all_players_in_league = serachForReleventPlayersInLeague(players_info.data.data);
-    const relvent_player_data = (extractRelevantPlayerOrCoachData(all_players_in_league, false));
+    const relvent_player_data = extractRelevantPlayerOrCoachData(all_players_in_league, false);
     return relvent_player_data;
 }
 

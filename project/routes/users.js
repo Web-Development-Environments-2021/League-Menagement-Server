@@ -9,8 +9,8 @@ const league_utils = require("./utils/league_utils");
  * Authenticate all incoming requests by middleware
  */
 router.use(async function(req, res, next) {
-    if (req.session && req.session.user_id) {
-        DButils.execQuery("SELECT user_id FROM users")
+    if (req.session && req.session.user_id >= 0) {
+        DButils.execQuery("SELECT user_id FROM dbo.users")
             .then((users) => {
                 if (users.find((x) => x.user_id === req.session.user_id)) {
                     req.user_id = req.session.user_id;
@@ -33,7 +33,12 @@ router.get("/getFavoriteGames", async(req, res, next) => {
         let game_ids_array = [];
         game_ids.map((element) => game_ids_array.push(element.game_id));
         const results = await league_utils.getGameDetailsById(game_ids_array);
-        res.status(200).send(results);
+        if(results.length == 0){
+            res.status(203).send("There is no content to send for this request.");
+        }
+        else{        
+            res.status(200).send(results);
+        }
     } catch (error) {
         next(error);
     }
@@ -49,5 +54,30 @@ router.post("/addFavoriteGames", async(req, res, next) => {
         next(error);
     }
 });
+
+// router.post("/addFavoritePlayers", async(req, res, next)=>{
+//     try{
+//         const user_id = req.session.user_id;
+//         const player_name = req.body.player_name;
+//         // const player_id = req.body.player_id;
+//         const status = await users.utils.markPlayerAsFavorite(user_id, player_name);
+//         res.status(201).send(status);
+
+//     }catch(error){
+//         next(0)
+//     }
+// });
+
+// router.post("/addFavoriteTeams", async(req, res, next)=>{
+//     try{
+//         const user_id = req.session.user_id;
+//         const team_name = req.body.team_name;
+//         // const team_id = req.body.team_id;
+//         const status = await users.utils.markTeamAsFavorite(user_id, team_name);
+//         res.status(201).send(status);
+//     }catch(error){
+//         next(0)
+//     }
+// });
 
 module.exports = router;

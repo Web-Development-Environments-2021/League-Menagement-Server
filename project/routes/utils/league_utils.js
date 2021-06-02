@@ -18,18 +18,23 @@ async function getLeagueDetails() {
             },
         }
     );
+    console.log(league);
     const stage = await axios.get(
-        `https://soccer.sportmonks.com/api/v2.0/stages/${league.data.data.current_stage_id}`, {
+        `https://soccer.sportmonks.com/api/v2.0/stages/season/${league.data.data.current_season_id}`, {
             params: {
                 api_token: process.env.api_token,
             },
         }
     );
+    let next_games = await getFutureGameDetails();
     return {
         league_name: league.data.data.name,
         current_season_name: league.data.data.season.data.name,
         current_stage_name: stage.data.data.name,
-        // next game details should come from DB
+        home_team: next_games[0].home_team_name,
+        away_team:next_games[0].away_team_name,
+        date:  next_games[0].date,
+        field: next_games[0].field
     };
 }
 
@@ -83,7 +88,7 @@ async function getPastGameDetails() {
     return games_info;
 }
 async function getFutureGameDetails() {
-    var query = `select * from dbo.games where date>='${today.toISOString().slice(0, 19).replace('T', ' ')}'`
+    var query = `select * from dbo.games where date>='${today.toISOString().slice(0, 19).replace('T', ' ')}' order by date ASC`
     games_info = await DButils.execQuery(
         query
     );
@@ -201,8 +206,6 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
         );
         list_of_info.push(game_info);
     };
-
-
     return list_of_info;
 };
 

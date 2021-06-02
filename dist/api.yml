@@ -165,6 +165,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Game'
+  /users/addFavoritePlayers:
+    post:
+      tags:
+        - player
+        - user
+      summary: add the favorite player to his favorites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "components/schemas/playerObject"
+      responses:
+        "201":
+          description: "ok"
+        "404":
+          description: "the player dosen't exists"
   /league/add&getRandFutureGames:
     get:
       tags:
@@ -474,7 +490,7 @@ components:
           type: string
           description: URL for the user's image
           format: URL
-          example: http://com.cloudinary://https
+          example: http://cloudinary.com/
     userLogIn:
       type: object
       properties:

@@ -13,16 +13,24 @@ async function getCoachName(team_id) {
     return {coach_name: coach_data.data.data.coach.data.common_name};
 }
 
-function extractTeamName(team_info) {
+function extractTeamName(teams_info) {
+  let teams = [];
+  teams_info.data.data.map((team_info) => {
+    console.log(team_info.league);
+    if((team_info.league == undefined) || (team_info.league.data.id != LEAGUE_ID)){
+        return ("Team not found"); 
+    }
+    const team_name  = team_info.name;
+    const team_id  = team_info.id;
+    const logo_path = team_info.logo_path;
+    teams.push({
+        team_name: team_name,
+        team_id: team_id,
+        logo_path: logo_path,
 
-  return team_info.data.data.map((team_info) => {
-      const team_name  = team_info.name;
-      const team_id  = team_info.id;
-      return {
-          team_name: team_name,
-          team_id: team_id
-      };
+    });
   });
+  return teams;
 }
 
 async function getAllTeamsByCountry(COUNTRY_ID){
@@ -38,23 +46,26 @@ async function getAllTeamsByCountry(COUNTRY_ID){
 }
 
 async function searchTeamsInfoByName(TEAM_NAME){
-  const teams_info = await axios.get(
-    `${api_domain}/teams/search/${TEAM_NAME}`,{
-      params:{
+  console.log(TEAM_NAME);
+  const teams_info = await axios.get(`${api_domain}/teams/search/${TEAM_NAME}`, {
+      params: {
         include : "league",
-        api_token : process.env.api_token,
+        api_token : 'vf02QEv5ZgECAvLugpNvLqLNMo2yRYfXEUTelhXxgyxzBMAo6LCc5aWurQu1',
       }
-    }
-  );
-  console.log(teams_info.data.data.league);
-  if((teams_info.data.data.league == undefined) || (teams_info.data.data[0].league.data.id !=LEAGUE_ID)){
-      throw error("Team not found"); 
-  }
-  const {name, logo_path} = teams_info.data.data[0];
-  return {
-      team_name: name,
-      logo_path: logo_path,
-  };
+    });
+  // console.log(teams_info.data.data[0].league);
+  // let a = teams_info.data.data[0].league == undefined;
+  // let b = teams_info.data.data[0].league.data.id != LEAGUE_ID;
+  // if((a) || (b)){
+  //     throw error("Team not found"); 
+  // }
+  // const {id, name, logo_path} = teams_info.data.data[0];
+  // return {
+  //     team_id : id,
+  //     team_name: name,
+  //     logo_path: logo_path,
+  // };
+  return extractTeamName(teams_info);
 }
 
 

@@ -4,6 +4,16 @@ const league_utils = require("./utils/league_utils");
 const auth_utils = require("./utils/auth_utils");
 const { classMethod } = require("@babel/types");
 
+router.use("", async function(req, res, next) {
+    let status = auth_utils.get_curr_user_login_permoission()
+    if(status == null){
+        res.sendStatus(401);
+    }
+    else{
+        next();
+    }
+});
+
 router.get("/getDetails", async(req, res, next) => {
     try {
         const league_details = await league_utils.getLeagueDetails();
@@ -31,12 +41,16 @@ router.get("/getFutureGame", async(req, res, next) => {
 });
 
 router.use("", async function(req, res, next) {
-    if ((auth_utils.get_curr_user_login_permoission())) {
-        console.log(true);
+    let status = auth_utils.get_curr_user_login_permoission()
+    if (status) {
         next();
     } else {
-        console.log(false);
-        res.sendStatus(401);
+        if(status == null){
+            res.sendStatus(401);
+        }
+        else if(status == false){
+            res.sendStatus(403);
+        }        
     }
 });
 
@@ -104,6 +118,10 @@ router.post("/insertNewGame", async(req, res, next) => {
         next(error);
     }
 });
+
+// router.use("", async(err, req,res,next)=>{
+//     if()
+// });
 
 
 

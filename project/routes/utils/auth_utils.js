@@ -17,10 +17,13 @@ const DButils = require("../utils/DButils");
 const get_curr_user_login_permoission = () => {
     if ((user_login.permission instanceof classes.Union_Reps_Auth)) {
         return true;
-    } else {
+    }
+    else if(user_login.permission == null) {
+        return null;
+    }
+    else if(user.login.permission instanceof classes.Fan){
         return false;
     }
-    //     return permission;
 };
 async function register(req) {
     const users = await DButils.execQuery(
@@ -78,7 +81,7 @@ function createMemeberUser(user) {
     user_login.set_permissions(user.permissions);
 }
 
-// const get_curr_user_login_permoission = () => {
+// const get_user_login_permoission = () => {
 //     return user_login.permission;
 // }
 
