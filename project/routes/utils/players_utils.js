@@ -98,10 +98,15 @@ function extractRelevantPlayerOrCoachData(players_info, isCoach = false) {
         }
         const { fullname, image_path, position_id } = player_info;
         var name = '';
+        var id_ = '';
         if (!isCoach) {
             name = player_info.team.data.name;
+            id_ = player_info.player_id;
+        } else {
+            id_ = player_info.coach_id;
         }
         return {
+            id: id_,
             name: fullname,
             image: image_path,
             position: position_id,
@@ -133,11 +138,11 @@ function serachForReleventPlayersInLeague(players_info) {
             }
         }
     });
-    
-    return players; 
- }
 
-async function getPlayersInfoByNameFromAPI(player_name, queryParams){
+    return players;
+}
+
+async function getPlayersInfoByNameFromAPI(player_name, queryParams) {
     const players_info = await axios.get(`${api_domain}/players/search/${player_name}`, {
         params: {
             include: queryParams,
@@ -147,11 +152,11 @@ async function getPlayersInfoByNameFromAPI(player_name, queryParams){
     return players_info;
 }
 
-function filterPlayersByPosition(all_players_in_league, positionName){
+function filterPlayersByPosition(all_players_in_league, positionName) {
     console.log(all_players_in_league);
     let players = [];
-    all_players_in_league.map((player)=>{
-        if(player.position.data.name == positionName){
+    all_players_in_league.map((player) => {
+        if (player.position.data.name == positionName) {
             players.push(player);
         }
         console.log(player);
@@ -159,10 +164,10 @@ function filterPlayersByPosition(all_players_in_league, positionName){
     return players;
 }
 
-function filterPlayersByTeamName(all_players_in_league, teamName){
+function filterPlayersByTeamName(all_players_in_league, teamName) {
     let players = [];
-    all_players_in_league.map((player)=>{
-        if(player.team.data.name == teamName){
+    all_players_in_league.map((player) => {
+        if (player.team.data.name == teamName) {
             players.push(player);
         }
     });
@@ -176,16 +181,16 @@ async function searchPlayersInfoByName(player_name) {
     return relvent_player_data;
 }
 
-async function searchPlayersInfoByNameFilterByPosition(player_name,positionName){
-    const players_info = await getPlayersInfoByNameFromAPI (player_name, "team.league.id, position");
+async function searchPlayersInfoByNameFilterByPosition(player_name, positionName) {
+    const players_info = await getPlayersInfoByNameFromAPI(player_name, "team.league.id, position");
     const all_players_in_league = serachForReleventPlayersInLeague(players_info.data.data);
     const filterPlayers = filterPlayersByTeamName(all_players_in_league, positionName);
     const relvent_player_data = extractRelevantPlayerOrCoachData(filterPlayers, false);
     return relvent_player_data;
 }
 
-async function searchPlayersInfoByNameAndFilterByTeamName(searchPlayer, team_name){
-    const players_info =  await getPlayersInfoByNameFromAPI(player_name, "team.league.id");
+async function searchPlayersInfoByNameAndFilterByTeamName(searchPlayer, team_name) {
+    const players_info = await getPlayersInfoByNameFromAPI(player_name, "team.league.id");
     const all_players_in_league = serachForReleventPlayersInLeague(players_info.data.data);
     const filterPlayers = filterPlayersByPosition(all_players_in_league, positionName);
     const relvent_player_data = extractRelevantPlayerOrCoachData(filterPlayers, false);
