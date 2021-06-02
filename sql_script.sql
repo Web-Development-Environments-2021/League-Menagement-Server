@@ -74,5 +74,8 @@ CREATE TABLE [dbo].[refree_games](
 	[game_id][bigint] NOT NULL FOREIGN KEY REFERENCES dbo.games(id),
 	PRIMARY KEY(referee_id,game_id),
 );
-
-DELETE from dbo.users WHERE user_id=0 or user_id = 1;
+select user_id from dbo.users WHERE first_name LIKE 'roi';
+DELETE from dbo.users WHERE user_id=1 or user_id = 1;
+UPDATE dbo.users
+SET permissions = 'representative'
+WHERE user_id = 0;
