@@ -428,19 +428,19 @@ components:
           minLength: 5
           type: string
           description: username contains between 3 to 8 letters and digits only
-          example: BIBI is the best
+          example: Yosef_Shoei
         firstname:
           type: string
           description: user's fisrt name
-          example: BIBI
+          example: Yosef
         lastname:
           type: string
           description: user's last name
-          example: The king
+          example: Shoei
         country:
           type: string
           description: user's last name
-          example: god's land
+          example: israel
         password:
           maxLength: 10
           minLength: 5
@@ -456,6 +456,7 @@ components:
           description: |
             password must contians between 6 to 10 chars, at least one char and one spicial letter example: $5r5r5r5
           format: password
+          example: $5r5r5r5
         email:
           type: string
           description: user's email
