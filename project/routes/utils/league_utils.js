@@ -233,7 +233,7 @@ function setRefereeToGameInDB(last_game, free_referee_id){
 }
 
 async function getAllreferees(){
-    return await DButils.execQuery(`SELECT max(id) FROM dbo.refree`);
+    return await DButils.execQuery(`SELECT * FROM dbo.refree`);
 }
 
 async function addReferee(refereeFisrtName, refereeLastName,qualification){

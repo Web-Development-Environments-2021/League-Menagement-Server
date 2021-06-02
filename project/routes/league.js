@@ -100,7 +100,7 @@ router.post("/addReferee", async(req, res, next)=>{
         next(error);
     }
 })
-// router.post("/insertNewGame/:date/:time/:league_name/:home_team_name/:away_team_name/:field", async(req, res, next) => {
+
 router.post("/insertNewGame", async(req, res, next) => {
     try {
         // const free_referee = await league_utils.getAllreferees();
@@ -118,11 +118,5 @@ router.post("/insertNewGame", async(req, res, next) => {
         next(error);
     }
 });
-
-// router.use("", async(err, req,res,next)=>{
-//     if()
-// });
-
-
 
 module.exports = router;

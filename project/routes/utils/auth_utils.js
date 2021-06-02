@@ -1,6 +1,5 @@
 const auth = require("../auth");
 const classes = require("../../classes");
-const reps = require("../utils/permission_representative");
 const bcrypt = require("bcryptjs");
 const user_login = new classes.Member_User;
 const DButils = require("../utils/DButils");

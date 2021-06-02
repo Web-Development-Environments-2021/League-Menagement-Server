@@ -53,13 +53,13 @@ router.get("/coachFullDetails/:coachId", async(req, res, next) => {
     }
 });
 
-router.get("/getAllTeamsByCountry/:COUNTRY_ID", async(req, res, next) => {
-    try {
-        const teamsNames = await teams_utils.getAllTeamsByCountry(req.params.COUNTRY_ID);
-        res.send(teamsNames);
-    } catch (error) {
-        next(error);
-    }
-});
+// router.get("/getAllTeamsByCountry/:COUNTRY_ID", async(req, res, next) => {
+//     try {
+//         const teamsNames = await teams_utils.getAllTeamsByCountry(req.params.COUNTRY_ID);
+//         res.send(teamsNames);
+//     } catch (error) {
+//         next(error);
+//     }
+// });
 
 module.exports = router;
