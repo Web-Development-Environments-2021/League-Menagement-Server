@@ -62,3 +62,4 @@ exports.User = User;
 exports.Member_User = Member_User;
 exports.Member_User_Role_Holder = Member_User_Role_Holder;
 exports.Union_Reps_Auth = Union_Reps_Auth;
+exports.Fan = Fan;
