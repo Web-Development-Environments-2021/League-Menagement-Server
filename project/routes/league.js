@@ -29,6 +29,8 @@ router.get("/getPastGame", async(req, res, next) => {
         next(error);
     }
 });
+
+
 router.get("/getFutureGame", async(req, res, next) => {
     try {
         const league_details = await league_utils.getFutureGameDetails();
@@ -37,6 +39,7 @@ router.get("/getFutureGame", async(req, res, next) => {
         next(error);
     }
 });
+
 
 router.use("", async function(req, res, next) {
     let status = auth_utils.get_curr_user_login_permoission()

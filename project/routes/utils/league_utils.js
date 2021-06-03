@@ -26,7 +26,9 @@ async function getLeagueDetails() {
             },
         }
     );
+
     let next_games = await getFutureGameDetails();
+    
     return {
         league_name: league.data.data.name,
         current_season_name: league.data.data.season.data.name,

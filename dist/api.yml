@@ -51,9 +51,9 @@ paths:
         "201":
           description: ok login
         "401":
-          description: user dosn't exist
+          description: Username or Password incorrect
         "403":
-          description: user don't have permission
+          description: Username or Password incorrect
   /logout:
     post:
       tags:
@@ -293,7 +293,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/futureGame"
+                  $ref: "#/components/schemas/newGame"
         "400":
           description: wrong input parameters
   /search/teams/{searchQuery}:
@@ -472,10 +472,10 @@ components:
       properties:
         username:
           type: string
-          example: bibi
+          example: roi
         password:
           type: string
-          example: $5r5r5r5
+          example: roi12345
     playerObject:
       type: object
       properties:
@@ -697,15 +697,31 @@ components:
           type: string
           description: current stage name
           example: Championship Round
+        home_team:
+          type: string
+          description: team name
+          example: Midtjylland  
+        away_team:    
+          type: string
+          description: team name
+          example: Horsens
+        date:  
+          type: string
+          description: date of the game
+          example: "21-12-10"
+        field:  
+          type: string
+          description: field of the game 
+          example: Meadowbank Dorking  
     newGame:
       type: object
       properties:
         date:
           type: string
-          example: 2021-08-12
+          example: "2021-08-12"
         time:
           type: string
-          example: 16:00:00
+          example: "16:00:00"
         league_name:
           type: string
           example: superleague
@@ -714,7 +730,7 @@ components:
           example: Midtjylland
         away_team_name:
           type: string
-          example: Midtjylland
+          example: Horsens
         field:
           type: string
           example: Meadowbank Dorking

@@ -13,7 +13,6 @@ class Member_User extends User {
             this.permission = new Union_Reps_Auth();
         }
     }
-
 }
 
 class Member_User_Role_Holder extends Member_User {
@@ -44,17 +43,13 @@ class Union_Reps_Auth extends Authorization {
 class Fan extends Authorization {
     constructor() {
         super();
-
     }
 }
-class Role {
-
-}
+class Role {}
 
 class Referee extends Role {
     constructor() {
         super();
-
     }
 }
 
