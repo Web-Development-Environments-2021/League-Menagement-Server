@@ -185,15 +185,15 @@ async function searchPlayersInfoByName(player_name) {
 async function searchPlayersInfoByNameFilterByPosition(player_name, positionName) {
     const players_info = await getPlayersInfoByNameFromAPI(player_name, "team.league.id, position");
     const all_players_in_league = serachForReleventPlayersInLeague(players_info.data.data);
-    const filterPlayers = filterPlayersByTeamName(all_players_in_league, positionName);
+    const filterPlayers = filterPlayersByPosition (all_players_in_league, positionName);
     const relvent_player_data = extractRelevantPlayerOrCoachData(filterPlayers, false);
     return relvent_player_data;
 }
 
-async function searchPlayersInfoByNameAndFilterByTeamName(searchPlayer, team_name) {
+async function searchPlayersInfoByNameAndFilterByTeamName(player_name, team_name) {
     const players_info = await getPlayersInfoByNameFromAPI(player_name, "team.league.id");
     const all_players_in_league = serachForReleventPlayersInLeague(players_info.data.data);
-    const filterPlayers = filterPlayersByPosition(all_players_in_league, positionName);
+    const filterPlayers = filterPlayersByTeamName(all_players_in_league, team_name);
     const relvent_player_data = extractRelevantPlayerOrCoachData(filterPlayers, false);
     return relvent_player_data;
 }

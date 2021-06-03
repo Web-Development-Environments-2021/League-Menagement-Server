@@ -257,8 +257,7 @@ async function getAllreferees() {
 }
 
 async function addReferee(refereeFisrtName, refereeLastName, qualification) {
-
-    let query = `SELECT user_id FROM dbo.users WHERE first_name = '${refereeFisrtName}' AND last_name = '${refereeLastName}'`;
+    let query = `SELECT user_id FROM dbo.users WHERE first_name like '${refereeFisrtName}' AND last_name like '${refereeLastName}'`;
     const referee_id = await DButils.execQuery(
         query
     );

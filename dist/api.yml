@@ -88,19 +88,19 @@ paths:
                 $ref: '#/components/schemas/playerObject'
         "402":
           description: player not found
-  /getAllTeamsByCountry/:COUNTRY_ID:
-    get:
-      tags:
-      - teams
-      responses:
-        "200":
-          description: find all teams by their country
-          content:
-            application/json:
-              schema:
-                $ref: '??'
-        "402":
-          description: player not found
+  # /getAllTeamsByCountry/:COUNTRY_ID:
+  #   get:
+  #     tags:
+  #     - team
+  #     responses:
+  #       "200":
+  #         description: find all teams by their country
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '??'
+  #       "402":
+  #         description: player not found
   /coachPreviewDetails/:coachId:
     get:
       tags:
@@ -117,7 +117,7 @@ paths:
   /teams/teamFullDetails/{teamId}: 
     get:
       tags:
-      - teams
+      - team
       description: return full details of team
       operationId: getMyTeams
       parameters:
@@ -129,7 +129,7 @@ paths:
           explode: false
           schema:
             type: string
-            example: 123434
+            example: 211
       responses:
         "200":
           description: team found
@@ -140,7 +140,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/team'
         "404":
-          description: teamId is not exists
+          description: team is not exists
   /users/getFavoriteGames:
     get:
       tags:
@@ -239,35 +239,6 @@ paths:
             description: ok created
         '404':
             description: bad inputs
-  /search/player/{searchQuery}:
-    get:
-      tags:
-      - team
-      - player
-      summary: returns list of search result (team\player)
-      operationId: search
-      parameters:
-      - name: searchQuery
-        in: path
-        description: free text for search
-        required: true
-        style: simple
-        explode: false
-        schema:
-          $ref: '#/components/schemas/search'
-      responses:
-        "200":
-          description: search results
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/result'
-        "204":
-          description: nothing found
-        "400":
-          description: bad input parameter
   /league/getDetails:
     get:
       tags:
@@ -325,6 +296,34 @@ paths:
                   $ref: "#/components/schemas/futureGame"
         "400":
           description: wrong input parameters
+  /search/teams/{searchQuery}:
+    get:
+      tags:
+      - team
+      - player
+      summary: search for teams by subset sting of the team name
+      operationId: search
+      parameters:
+      - name: searchQuery
+        in: path
+        description: free text for search
+        required: true
+        schema:
+          type: string
+          example: Horsens
+      responses:
+        "200":
+          description: search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/teams_short_preview'
+        "204":
+          description: nothing show
+        "400":
+          description: bad input parameter
   /search/players/{searchQuery}:
     get:
       tags:
@@ -349,31 +348,7 @@ paths:
                   $ref: '#/components/schemas/playerObject'
         "400":
           description: player not found
-  /search/teams/{searchQuery}:
-    get:
-        tags:
-        - teams
-        summary: search for team by her name
-        parameters:
-          - name: searchQuery
-            in: path
-            description: string of the team name
-            required: true
-            schema: 
-              type: string
-              example: Nordsjælland
-        responses:
-          "200":
-            description: team found
-            content:
-              aplication/json:
-                schema:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/team'
-          "400":
-            description: team not found
-  /search/players/{searchQuery}/filter/{positionName}:
+  /search/players/{searchQuery}/filterByPosition/{positionName}:
     get:
       tags:
       - players
@@ -404,7 +379,7 @@ paths:
                   $ref: '#/components/schemas/playerObject'
         "400":
           description: player not found
-  /search/players/{searchQuery}/filter/{teamName}:
+  /search/players/{searchQuery}/filterByTeam/{teamName}:
     get:
       tags:
       - players
@@ -453,19 +428,19 @@ components:
           minLength: 5
           type: string
           description: username contains between 3 to 8 letters and digits only
-          example: BIBI is the best
+          example: Yosef_Shoei
         firstname:
           type: string
           description: user's fisrt name
-          example: BIBI
+          example: Yosef
         lastname:
           type: string
           description: user's last name
-          example: The king
+          example: Shoei
         country:
           type: string
           description: user's last name
-          example: god's land
+          example: israel
         password:
           maxLength: 10
           minLength: 5
@@ -481,6 +456,7 @@ components:
           description: |
             password must contians between 6 to 10 chars, at least one char and one spicial letter example: $5r5r5r5
           format: password
+          example: $5r5r5r5
         email:
           type: string
           description: user's email
@@ -666,15 +642,18 @@ components:
         filed:
           type: string
           example: Tedi
-    result:
+    teams_short_preview:
       type: object
       properties:
         id:
           type: string
           example: "1234"
-        category:
+        team_name:
           type: string
           example: team
+        logo_path:
+          type: string
+          example: https://upload.wikimedia.org/wikipedia/he/3/3/BeitarJerusalemCrestStar2020.png
     team:
       type: object
       properties:
@@ -684,7 +663,7 @@ components:
         team_name:
           type: string
           example: barcelona
-        logo_url:
+        logo_path:
           type: string
           example: https://upload.wikimedia.org/wikipedia/he/3/3/BeitarJerusalemCrestStar2020.png
         players:
@@ -745,4 +724,4 @@ components:
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/shi67/fbs/1.0.0
+    url: http://localhost:3000

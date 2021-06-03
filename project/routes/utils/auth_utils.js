@@ -37,7 +37,7 @@ async function register(req) {
     );
     req.body.password = hash_password;
 
-    var query0 = `select max(user_id) from dbo.users`
+    var query0 = `select max(user_id) from dbo.users`;
     max_id = await DButils.execQuery(
         query0
     );
@@ -46,12 +46,12 @@ async function register(req) {
         var id = String(parseInt(max_id[0]['']) + 1);
     }
     // add the new username
+    let insertion_query =  `INSERT INTO dbo.users (user_id, username, password, permissions, first_name, last_name, country, email, image_user) VALUES ('${id}', '${req.body.username}','${hash_password}', 'Fan', '${req.body.firstname}','${req.body.lastname}','${req.body.country}', '${req.body.email}','${req.body.image_url}')`;
     await DButils.execQuery(
-        `INSERT INTO dbo.users (user_id, username, password, permissions, first_name, last_name, country, email, image_user) 
-        VALUES (${id}, '${req.body.username}','${hash_password}', 'Fan', '${req.body.firstname}','${req.body.lastname}',
-        '${req.body.country}', '${req.body.email}','${req.body.image_url}')`
+        insertion_query
     );
 }
+
 async function Login(req, res) {
     const user = (
         await DButils.execQuery(

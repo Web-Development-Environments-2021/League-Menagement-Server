@@ -93,9 +93,12 @@ router.post("/addReferee", async(req, res, next) => {
         const result = await league_utils.addReferee(req.body.firstName, req.body.lastName, req.body.qualification);
         res.send(result);
     } catch (error) {
-        next(error);
+        // next(error);
+        console.log(error);
+        res.status(404).send("something went wrong cannot add new referee")
     }
 })
+
 router.post("/insertNewGame", async(req, res, next) => {
     try {
         const new_game_details = await league_utils.insertNewGame(
