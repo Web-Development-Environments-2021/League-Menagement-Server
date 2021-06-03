@@ -8,17 +8,18 @@ async function markGameAsFavorite(user_id, game_id) {
         query0
     );
     if (game_ids.length == 0) {
-        return "no game with this game_id";
+        throw new TypeError("no game with this game_id");
     }
-    var query = `insert into dbo.favoriteGames (user_id,game_id) values (${user_id},${game_id})`;
+    var query = `insert into dbo.favoriteGames (user_id,game_id) values (${user_id},${game_ids[0]["id"]})`;
     await DButils.execQuery(
         query
     );
     return "The game successfully saved as favorite";
+
 }
 
 // async function markPlayerAsFavorite(player_id){
-    
+
 // }
 
 // async function markTeamAsFavorite(user_id, team_name){
@@ -39,7 +40,7 @@ async function getFavoriteGames(user_id) {
 // }
 
 // async function getFavoriteTeamsInfo(player_id){
-    
+
 // }
 
 exports.markGameAsFavorite = markGameAsFavorite;

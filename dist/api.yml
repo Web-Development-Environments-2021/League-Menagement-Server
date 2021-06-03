@@ -255,7 +255,7 @@ paths:
                   $ref: "#/components/schemas/League"
         "400":
           description: wrong input parameters
-  /league/addNewLeague/:league_name:
+  /league/addNewLeague:
     post:
       tags:
       - admin
@@ -271,7 +271,7 @@ paths:
         "201":
           description: ok created
         "401":
-          description: league allready dosn't exist
+          description: league allready exist
         "403":
           description: user doesn't have permission
   /league/insertNewGame/:

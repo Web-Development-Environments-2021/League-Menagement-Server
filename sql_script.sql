@@ -7,14 +7,7 @@ CREATE TABLE [dbo].[users](
 )
 
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[favoriteGames]') AND type in (N'U'))
-DROP TABLE [dbo].[favoriteGames]
-GO
 
-CREATE TABLE [dbo].[favoriteGames](
-    [user_id] [int] NOT NULL,
-    [game_id] [bigint] NOT NULL
-);
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[users]') AND type in (N'U'))
 DROP TABLE [dbo].[users]
@@ -34,16 +27,13 @@ CREATE TABLE [dbo].[users](
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[events_schedule]') AND type in (N'U'))
 DROP TABLE [dbo].[events_schedule]
 GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[refree_games]') AND type in (N'U'))
+DROP TABLE [dbo].[refree_games]
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[favoriteGames]') AND type in (N'U'))
+DROP TABLE [dbo].[favoriteGames]
+GO
 
-CREATE TABLE [dbo].[events_schedule](
-	[events_scheduleID] [bigint] PRIMARY KEY NOT NULL,
-	[date] [smalldatetime] NOT NULL,
-	[minute] [int] NOT NULL,
-	[extra_minute] [int] NULL,
-	[player_id] [int] NOT NULL,
-	[player_name] [varchar](40) NOT NULL,
-	[type] [varchar](30) NOT NULL
-);
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[games]') AND type in (N'U'))
 DROP TABLE [dbo].[games]
 GO
@@ -59,21 +49,33 @@ CREATE TABLE [dbo].[games](
     [field] [varchar] (30) NOT NULL,
     [winner] [varchar] (30) NULL,
 );
-
-CREATE TABLE [dbo].[refree](
-    [user_id] [int]  NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES dbo.users(user_id),
-	[qualification][VARCHAR](30),
+CREATE TABLE [dbo].[events_schedule](
+	[events_scheduleID] [bigint] PRIMARY KEY NOT NULL,
+	[date] [smalldatetime] NOT NULL,
+	[minute] [int] NOT NULL,
+	[extra_minute] [int] NULL,
+	[player_id] [int] NOT NULL,
+	[player_name] [varchar](40) NOT NULL,
+	[type] [varchar](30) NOT NULL
 );
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[refree_games]') AND type in (N'U'))
-DROP TABLE [dbo].[refree_games]
-GO
-
 CREATE TABLE [dbo].[refree_games](
     [referee_id] [int]  NOT NULL FOREIGN KEY REFERENCES dbo.refree(user_id),
 	[game_id][bigint] NOT NULL FOREIGN KEY REFERENCES dbo.games(id),
 	PRIMARY KEY(referee_id,game_id),
 );
+CREATE TABLE [dbo].[favoriteGames](
+    [user_id] [int] NOT NULL,
+    [game_id] [bigint] NOT NULL
+);
+
+
+
+-- CREATE TABLE [dbo].[refree](
+--     [user_id] [int]  NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES dbo.users(user_id),
+-- 	[qualification][VARCHAR](30),
+-- );
+
+
 select user_id from dbo.users WHERE first_name LIKE 'roi';
 DELETE from dbo.users WHERE user_id=1 or user_id = 1;
 UPDATE dbo.users
