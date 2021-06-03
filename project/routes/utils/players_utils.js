@@ -14,7 +14,8 @@ async function getPlayerIdsByTeam(team_id) {
     team.data.data.squad.data.map((player) =>
         player_ids_list.push(player.player_id)
     );
-    return player_ids_list;
+    let team_name = team.data.data.name;
+    return { team_name, player_ids_list };
 }
 
 async function getPlayersInfo(players_ids_list, isFull) {
@@ -116,9 +117,9 @@ function extractRelevantPlayerOrCoachData(players_info, isCoach = false) {
 }
 
 async function getPlayersByTeam(team_id) {
-    let player_ids_list = await getPlayerIdsByTeam(team_id);
-    let players_info = await getPlayersInfo(player_ids_list);
-    return players_info;
+    const { team_name, player_ids_list } = await getPlayerIdsByTeam(team_id);
+    const players_info = await getPlayersInfo(player_ids_list);
+    return { team_name, players_info };
 }
 async function getTeamById(team_id) {
     let team = await axios.get(`${api_domain}/teams/${team_id}`, {

@@ -7,7 +7,7 @@ const LEAGUE_ID = 271;
 const today = new Date();
 const STARTDATE = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 const ENDATEFUTURE = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate() + 5);
-const ENDATEPAST = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate() - 5);
+const ENDATEPAST = today.getFullYear() + '-' + (today.getMonth()) + '-' + (today.getDate() + 10);
 
 async function getLeagueDetails() {
     const league = await axios.get(
@@ -32,8 +32,8 @@ async function getLeagueDetails() {
         current_season_name: league.data.data.season.data.name,
         current_stage_name: stage.data.data.name,
         home_team: next_games[0].home_team_name,
-        away_team:next_games[0].away_team_name,
-        date:  next_games[0].date,
+        away_team: next_games[0].away_team_name,
+        date: next_games[0].date,
         field: next_games[0].field
     };
 }
@@ -88,12 +88,30 @@ async function getPastGameDetails() {
     return games_info;
 }
 async function getFutureGameDetails() {
-    var query = `select * from dbo.games where date>='${today.toISOString().slice(0, 19).replace('T', ' ')}' order by date ASC`
+    var query = `select * from dbo.games where date>='${today.toISOString().slice(0, 19).replace('T', ' ')}'  order by date ASC`
     games_info = await DButils.execQuery(
         query
     );
     return games_info;
 }
+
+
+async function getPastGameDetailsByTeam(team_name) {
+    var query = `select * from dbo.games where date<convert(date,'${today.toISOString().slice(0, 19).replace('T', ' ')}',120) and (home_team_name='${team_name}' or away_team_name='${team_name}')`
+    games_info = await DButils.execQuery(
+        query
+    );
+    return games_info;
+}
+async function getFutureGameDetailsByTeam(team_name) {
+    var query = `select * from dbo.games where date>='${today.toISOString().slice(0, 19).replace('T', ' ')}' and (home_team_name='${team_name}' or away_team_name='${team_name}') order by date ASC`
+    games_info = await DButils.execQuery(
+        query
+    );
+    return games_info;
+}
+
+
 async function insertNewGame(_date, _time, _league_name, _home_team_name, _away_team_name, _field, _free_referee_id) {
     // if (!(auth_utils.get_curr_user_login_permoission() instanceof classes.Union_Reps_Auth)) {
     //     console.log(false);
@@ -120,6 +138,7 @@ async function insertNewGame(_date, _time, _league_name, _home_team_name, _away_
         query
     );
     await setRefereeToGameInDB(str_max_id, _free_referee_id);
+
     // next game details should come from DB
     return game_info;
 }
@@ -161,22 +180,9 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
     console.log(fixtures.data.data.length);
     for (let i = 0; i < fixtures.data.data.length; i++) {
 
-        const home_team = await axios.get(
-            `https://soccer.sportmonks.com/api/v2.0/teams/${fixtures.data.data[i].localteam_id}/`, {
-                params: {
-                    include: "Teams",
-                    api_token: process.env.api_token,
-                },
-            }
-        );
-        const away_team = await axios.get(
-            `https://soccer.sportmonks.com/api/v2.0/teams/${fixtures.data.data[i].visitorteam_id}`, {
-                params: {
-                    include: "Teams",
-                    api_token: process.env.api_token,
-                },
-            }
-        );
+        const home_team = await teamNameById(fixtures.data.data[i].localteam_id);
+        const away_team = await teamNameById(fixtures.data.data[i].visitorteam_id);
+
 
         game_info = {
             id: fixtures.data.data[i].id,
@@ -192,10 +198,14 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
         };
         events = fixtures.data.data[i].events;
         if (isPastGame) {
-            game_info["winner"] = fixtures.data.data[i].winner_team_id;
-            if (game_info["winner"] == null) {
-                game_info["winner"] = `'"Draw"'`;
+            if (fixtures.data.data[i].winner_team_id == null) {
+                game_info["winner"] = `'Draw'`;
+            } else {
+                const winner = await teamNameById(fixtures.data.data[i].winner_team_id);
+                game_info["winner"] = `'${winner.data.data.name}'`;
             }
+
+
             await insert_events(events, fixtures.data.data[i].time.starting_at.date, fixtures.data.data[i].time.starting_at.time);
         } else {
             game_info["winner"] = `'"none"'`;
@@ -209,6 +219,16 @@ const extractRelevantGameData = async(fixtures, isPastGame) => {
     return list_of_info;
 };
 
+async function teamNameById(team_id) {
+    return await axios.get(
+        `https://soccer.sportmonks.com/api/v2.0/teams/${team_id}`, {
+            params: {
+                include: "Teams",
+                api_token: process.env.api_token,
+            },
+        }
+    );
+}
 async function createNewLeague(name) {
     await DButils.execQuery(
         `CREATE TABLE [dbo].[games_'${name}'](
@@ -228,26 +248,30 @@ async function createNewLeague(name) {
 
 }
 
-function setRefereeToGameInDB(last_game, free_referee_id){
-    DButils.execQuery(`INSERT INTO dbo.refree_games (referee_id, game_id) VALUES (${free_referee_id},${last_game})`);    
+async function setRefereeToGameInDB(last_game, free_referee_id) {
+    DButils.execQuery(`INSERT INTO dbo.refree_games (referee_id, game_id) VALUES (${free_referee_id},${last_game})`);
 }
 
-async function getAllreferees(){
-    return await DButils.execQuery(`SELECT max(id) FROM dbo.refree`);
+async function getAllreferees() {
+    return await DButils.execQuery(`SELECT * FROM dbo.refree`);
 }
 
-async function addReferee(refereeFisrtName, refereeLastName,qualification){
+async function addReferee(refereeFisrtName, refereeLastName, qualification) {
+
     let query = `SELECT user_id FROM dbo.users WHERE first_name = '${refereeFisrtName}' AND last_name = '${refereeLastName}'`;
     const referee_id = await DButils.execQuery(
         query
     );
-    const res = await insertNewRefereeToDB(referee_id[0].user_id,qualification);
+    if (referee_id.length == 0) {
+        throw new TypeError("No such user")
+    }
+    const res = await insertNewRefereeToDB(referee_id[0].user_id, qualification);
     return res;
 }
 
-async function insertNewRefereeToDB(referee_id, referee_qualification){ 
+async function insertNewRefereeToDB(referee_id, referee_qualification) {
     let query = `INSERT INTO dbo.refree (user_id, qualification) VALUES (${referee_id}, '${referee_qualification}')`;
-    let result =  await DButils.execQuery(
+    let result = await DButils.execQuery(
         query);
     return result;
 }
@@ -262,3 +286,5 @@ exports.getFutureGameDetailsFromAPI = getFutureGameDetailsFromAPI;
 exports.getFutureGameDetails = getFutureGameDetails;
 exports.insertNewGame = insertNewGame;
 exports.getGameDetailsById = getGameDetailsById;
+exports.getFutureGameDetailsByTeam = getFutureGameDetailsByTeam;
+exports.getPastGameDetailsByTeam = getPastGameDetailsByTeam;

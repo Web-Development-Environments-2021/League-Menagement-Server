@@ -1,6 +1,5 @@
 const auth = require("../auth");
 const classes = require("../../classes");
-const reps = require("../utils/permission_representative");
 const bcrypt = require("bcryptjs");
 const user_login = new classes.Member_User;
 const DButils = require("../utils/DButils");
@@ -17,11 +16,9 @@ const DButils = require("../utils/DButils");
 const get_curr_user_login_permoission = () => {
     if ((user_login.permission instanceof classes.Union_Reps_Auth)) {
         return true;
-    }
-    else if(user_login.permission == null) {
+    } else if (user_login.permission == null) {
         return null;
-    }
-    else if(user.login.permission instanceof classes.Fan){
+    } else if (user.login.permission instanceof classes.Fan) {
         return false;
     }
 };
