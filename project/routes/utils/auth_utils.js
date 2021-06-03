@@ -18,7 +18,7 @@ const get_curr_user_login_permoission = () => {
         return true;
     } else if (user_login.permission == null) {
         return null;
-    } else if (user.login.permission instanceof classes.Fan) {
+    } else if ((user_login.permission instanceof classes.Fan)) {
         return false;
     }
 };
