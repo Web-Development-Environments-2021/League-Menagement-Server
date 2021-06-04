@@ -49,7 +49,7 @@ async function searchTeamsInfoByName(TEAM_NAME){
   const teams_info = await axios.get(`${api_domain}/teams/search/${TEAM_NAME}`, {
       params: {
         include : "league",
-        api_token : 'vf02QEv5ZgECAvLugpNvLqLNMo2yRYfXEUTelhXxgyxzBMAo6LCc5aWurQu1',
+        api_token : 'vf02QEv5ZgECAvLugpNvLqLNMo2yRYfXEUTelhXxgyxzBMAo6LCc5aWurQu1', //process.env.api_token,
       }
     });
   // console.log(teams_info.data.data[0].league);
