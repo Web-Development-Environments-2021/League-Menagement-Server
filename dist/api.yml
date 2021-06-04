@@ -158,29 +158,22 @@ paths:
       tags:
         - game
         - user
-      responses:
-        "200":
-          description: ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Game'
-  /users/addFavoritePlayers:
-    post:
-      tags:
-        - player
-        - user
-      summary: add the favorite player to his favorites
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "components/schemas/playerObject"
+              properties:
+                game_id:
+                  type: string
+                  description: desired game_id
+                  example: 17948787
       responses:
         "201":
-          description: "ok"
-        "404":
-          description: "the player dosen't exists"
+          description: The game successfully saved as favorite
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
   /league/add&getRandFutureGames:
     get:
       tags:
@@ -572,76 +565,64 @@ components:
         qualification:
           type: string
           example: runing
+  
     Game:
       type: object
       properties:
         date:
           type: string
-          example: 10 May 2021
-        time:
+          example: "2021-05-16T11:00:00"
+        home_team_name:
           type: string
-          example: "1080"
-        hostTeam:
+          example: Midtjylland
+        away_team_name:
           type: string
-          example: Beitar Jerusalem F.C.
-        gusetTeam:
-          type: string
-          example: Arab F.C
-        referee:
-          type: string
-          example: yosef shouei
+          example: Randers
         field:
           type: string
-          example: Meadowbank Dorking
+          example: MCH Arena
+        home_score:
+          type: int
+          example: 1
+        away_score:
+          type: int
+          example: 1
         winner:
-          example: Midtjylland
-        gamesSchedule:
-          example: 10 May 2021
+          example: Draw
     pastGame:
       type: object
       properties:
         date:
           type: string
-          example: 2021-12-12
-        time:
-          type: string
-          example: "1080"
-        hostTeam:
-          type: string
-          example: Beitar Jerusalem F.C.
-        gusetTeam:
-          type: string
-          example: Arab F.C
-        referee:
-          type: string
-          example: yosef shouei
-        filed:
-          type: string
-          example: Tedi
-        winner:
+          example: "2021-05-16T11:00:00"
+        home_team_name:
           type: string
           example: Midtjylland
+        away_team_name:
+          type: string
+          example: Randers
+        field:
+          type: string
+          example: MCH Arena
+        winner:
+          example: Draw
     futureGame:
       type: object
       properties:
         date:
           type: string
-          example: 10 May 2021
-        time:
+          example: "2021-05-16T11:00:00"
+        home_team_name:
           type: string
-          example: "1080"
-        hostTeam:
+          example: Midtjylland
+        away_team_name:
           type: string
-          example: Beitar Jerusalem F.C.
-        gusetTeam:
+          example: Randers
+        field:
           type: string
-          example: Arab F.C
-        referee:
-          type: string
-          example: yosef shouei
-        filed:
-          type: string
-          example: Tedi
+          example: MCH Arena
+        winner:
+          example: none
     teams_short_preview:
       type: object
       properties:
