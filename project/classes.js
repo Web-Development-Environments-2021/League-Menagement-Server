@@ -45,8 +45,7 @@ class Fan extends Authorization {
         super();
     }
 }
-class Role {
-}
+class Role {}
 
 class Referee extends Role {
     constructor() {

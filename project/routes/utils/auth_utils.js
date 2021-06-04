@@ -18,7 +18,7 @@ const get_curr_user_login_permoission = () => {
         return true;
     } else if (user_login.permission == null) {
         return null;
-    } else if ((user_login.permission instanceof classes.Fan)) {
+    } else if (user_login.permission instanceof classes.Fan) {
         return false;
     }
 };
@@ -28,7 +28,7 @@ async function register(req) {
     );
 
     if (users.find((x) => x.username === req.body.username))
-        throw { status: 409, message: "Username has been taken" };
+        throw { status: 409, messaguser_logine: "Username has been taken" };
 
     //hash the password
     let hash_password = bcrypt.hashSync(
@@ -46,7 +46,7 @@ async function register(req) {
         var id = String(parseInt(max_id[0]['']) + 1);
     }
     // add the new username
-    let insertion_query =  `INSERT INTO dbo.users (user_id, username, password, permissions, first_name, last_name, country, email, image_user) VALUES ('${id}', '${req.body.username}','${hash_password}', 'Fan', '${req.body.firstname}','${req.body.lastname}','${req.body.country}', '${req.body.email}','${req.body.image_url}')`;
+    let insertion_query = `INSERT INTO dbo.users (user_id, username, password, permissions, first_name, last_name, country, email, image_user) VALUES ('${id}', '${req.body.username}','${hash_password}', 'Fan', '${req.body.firstname}','${req.body.lastname}','${req.body.country}', '${req.body.email}','${req.body.image_url}')`;
     await DButils.execQuery(
         insertion_query
     );
