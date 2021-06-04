@@ -39,7 +39,7 @@ router.get("/playerFullDetails/:playerId", async(req, res, next) => {
 
 router.get("/coachPreviewDetails/:coachId", async(req, res, next) => {
     try {
-        const coachDetails = await players_utils.getCoachesInfo([req.params.playerId], false);
+        const coachDetails = await players_utils.getCoachesInfo([req.params.coachId], false);
         res.send(coachDetails);
     } catch (error) {
         next(error);

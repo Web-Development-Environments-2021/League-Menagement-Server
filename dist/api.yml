@@ -62,10 +62,18 @@ paths:
       responses:
         "200":
           description: "the user has ben successfully logged out"
-  /playerPreviewDetails/:playerId:
+  /teams/playerPreviewDetails/{playerId}:
     get:
       tags:
       - player
+      parameters:
+        - name: playerId
+          in: path
+          description: player Id
+          required: true
+          schema:
+            type: string
+            example: 172104
       responses:
         "200":
           description: short display of player
@@ -75,17 +83,25 @@ paths:
                 $ref: '#/components/schemas/playerObject'
         "402":
           description: player not found
-  /playerFullDetails/:playerId:
+  /teams/playerFullDetails/{playerId}:
     get:
       tags:
       - player
+      parameters:
+        - name: playerId
+          in: path
+          description: player Id
+          required: true
+          schema:
+            type: string
+            example: 172104
       responses:
         "200":
           description: full display of player
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/playerObject'
+                $ref: '#/components/schemas/playerFullObject'
         "402":
           description: player not found
   # /getAllTeamsByCountry/:COUNTRY_ID:
@@ -101,10 +117,18 @@ paths:
   #               $ref: '??'
   #       "402":
   #         description: player not found
-  /coachPreviewDetails/:coachId:
+  /teams/coachPreviewDetails/{coachId}:
     get:
       tags:
       - coache
+      parameters:
+        - name: coachId
+          in: path
+          description: coach Id
+          required: true
+          schema:
+            type: string
+            example: 1467946
       responses:
         "200":
           description: ok
@@ -112,6 +136,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/cocahObject'
+        "402":
+          description: coach not found
+  /teams/coachFullDetails/{coachId}:
+    get:
+      tags:
+      - coache
+      parameters:
+        - name: coachId
+          in: path
+          description: coach Id
+          required: true
+          schema:
+            type: string
+            example: 1467946
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/coachFullObject'
         "402":
           description: coach not found
   /teams/teamFullDetails/{teamId}: 
@@ -174,19 +219,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Game'
-  /league/add&getRandFutureGames:
-    get:
-      tags:
-      - game
-      - league
-      - admin
-      responses:
-        "200":
-          description: ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/futureGame'
+  # /league/add&getRandFutureGames:
+  #   get:
+  #     tags:
+  #     - game
+  #     - league
+  #     - admin
+  #     responses:
+  #       "200":
+  #         description: ok
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/futureGame'
   /league/getPastGame:
     get:
       tags:
@@ -529,7 +574,7 @@ components:
         teamname:
           type: string
           example: Horsens
-    cocahFullObject:
+    coachFullObject:
       type: object
       properties:
         image-url:
@@ -628,7 +673,7 @@ components:
       properties:
         id:
           type: string
-          example: 211
+          example: 939
         team_name:
           type: string
           example: Horsens
@@ -640,7 +685,7 @@ components:
       properties:
         id:
           type: string
-          example: 211
+          example: 939
         team_name:
           type: string
           example: Horsens
@@ -716,8 +761,8 @@ components:
           type: string
           example: Meadowbank Dorking
         referee:
-          type: string
-          example: Yosef Shoei
+          type: int
+          example: 2
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking

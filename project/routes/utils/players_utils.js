@@ -185,7 +185,7 @@ async function searchPlayersInfoByName(player_name) {
 async function searchPlayersInfoByNameFilterByPosition(player_name, positionName) {
     const players_info = await getPlayersInfoByNameFromAPI(player_name, "team.league.id, position");
     const all_players_in_league = serachForReleventPlayersInLeague(players_info.data.data);
-    const filterPlayers = filterPlayersByPosition (all_players_in_league, positionName);
+    const filterPlayers = filterPlayersByPosition(all_players_in_league, positionName);
     const relvent_player_data = extractRelevantPlayerOrCoachData(filterPlayers, false);
     return relvent_player_data;
 }
