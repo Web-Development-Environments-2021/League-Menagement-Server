@@ -421,15 +421,15 @@ components:
           minLength: 5
           type: string
           description: username contains between 3 to 8 letters and digits only
-          example: Yosef_Shoei
+          example: roi
         firstname:
           type: string
           description: user's fisrt name
-          example: Yosef
+          example: roi
         lastname:
           type: string
           description: user's last name
-          example: Shoei
+          example: kremer
         country:
           type: string
           description: user's last name
@@ -441,7 +441,7 @@ components:
           description: |
             password must contians between 6 to 10 chars, at least one char and one spicial letter
           format: password
-          example: $5r5r5r5
+          example: roi12345
         confirmationpassword:
           maxLength: 10
           minLength: 5
@@ -449,7 +449,7 @@ components:
           description: |
             password must contians between 6 to 10 chars, at least one char and one spicial letter example: $5r5r5r5
           format: password
-          example: $5r5r5r5
+          example: roi12345
         email:
           type: string
           description: user's email
@@ -477,13 +477,13 @@ components:
           example: https://upload.wikimedia.org/wikipedia/he/3/3/BeitarJerusalemCrestStar2020.png
         playername:
           type: string
-          example: israel
+          example: Johan
         teamname:
           type: string
-          example: Beitar Jerusalem F.C.
+          example: Horsens
         playerposition:
           type: string
-          example: Goolkeeper
+          example: Defnder
     playerFullObject:
       type: object
       properties:
@@ -492,13 +492,13 @@ components:
           example: https://upload.wikimedia.org/wikipedia/he/3/3/BeitarJerusalemCrestStar2020.png
         playername:
           type: string
-          example: israel
+          example: Johan
         teamname:
           type: string
-          example: Beitar Jerusalem F.C.
+          example: Horsens
         playerposition:
           type: string
-          example: Goolkeeper
+          example: Defnder
         common_name:
           type: string
           example: j.james
@@ -528,7 +528,7 @@ components:
           example: israel
         teamname:
           type: string
-          example: Beitar Jerusalem F.C.
+          example: Horsens
     cocahFullObject:
       type: object
       properties:
@@ -537,10 +537,10 @@ components:
           example: https://upload.wikimedia.org/wikipedia/he/3/3/BeitarJerusalemCrestStar2020.png
         playername:
           type: string
-          example: israel
+          example: johan
         teamname:
           type: string
-          example: Beitar Jerusalem F.C.
+          example: Horsens
         common_name:
           type: string
           example: j.james
@@ -558,10 +558,10 @@ components:
       properties:
         firstName:
           type: string
-          example: Yosef
+          example: roi
         lastName: 
           type: string
-          example: Shouei
+          example: kremer
         qualification:
           type: string
           example: runing
@@ -601,7 +601,7 @@ components:
         away_team_name:
           type: string
           example: Randers
-        field:
+        filed:
           type: string
           example: MCH Arena
         winner:
@@ -628,10 +628,10 @@ components:
       properties:
         id:
           type: string
-          example: "1234"
+          example: 211
         team_name:
           type: string
-          example: team
+          example: Horsens
         logo_path:
           type: string
           example: https://upload.wikimedia.org/wikipedia/he/3/3/BeitarJerusalemCrestStar2020.png
@@ -640,10 +640,10 @@ components:
       properties:
         id:
           type: string
-          example: "123"
+          example: 211
         team_name:
           type: string
-          example: barcelona
+          example: Horsens
         logo_path:
           type: string
           example: https://upload.wikimedia.org/wikipedia/he/3/3/BeitarJerusalemCrestStar2020.png

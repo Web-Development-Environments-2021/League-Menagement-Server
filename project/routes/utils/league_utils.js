@@ -78,7 +78,6 @@ async function getFutureGameDetailsFromAPI() {
             },
         }
     );
-    //next game details should come from DB
     return extractRelevantGameData(fixtures, true);
 }
 
@@ -96,7 +95,6 @@ async function getFutureGameDetails() {
     );
     return games_info;
 }
-
 
 async function getPastGameDetailsByTeam(team_name) {
     var query = `select * from dbo.games where date<convert(date,'${today.toISOString().slice(0, 19).replace('T', ' ')}',120) and (home_team_name='${team_name}' or away_team_name='${team_name}')`
