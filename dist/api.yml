@@ -718,7 +718,7 @@ components:
         current_season_name:
           type: string
           description: current season name
-          example: "2020/2021"
+          example: "2021/2022"
         current_stage_name:
           type: string
           description: current stage name
