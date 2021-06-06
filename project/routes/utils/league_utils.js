@@ -28,11 +28,11 @@ async function getLeagueDetails() {
     );
 
     let next_games = await getFutureGameDetails();
-    
+
     return {
         league_name: league.data.data.name,
         current_season_name: league.data.data.season.data.name,
-        current_stage_name: stage.data.data.name,
+        current_stage_name: stage.data.data[1].name,
         home_team: next_games[0].home_team_name,
         away_team: next_games[0].away_team_name,
         date: next_games[0].date,
