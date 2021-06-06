@@ -1,11 +1,1 @@
 #Assignment-3-2-template
-tedious_userName=shimons
-tedious_password=shim0n$server
-tedious_server=shimons.database.windows.net
-tedious_database=shimons
-COOKIE_SECRET='0GBlJZ9EKBt2Zbi2flRPvztczCewBxXK'
-api_token='vf02QEv5ZgECAvLugpNvLqLNMo2yRYfXEUTelhXxgyxzBMAo6LCc5aWurQu1'
-bcrypt_saltRounds=13
-api_tokendo_net=Server=tcp:shimons.database.windows.net,1433;Initial Catalog=shimons;Persist Security Info=False;User ID=shimons;Password=shim0n$server;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
-Representative_of_the_Association_username=admin
-Representative_of_the_Association_password=admin12345
