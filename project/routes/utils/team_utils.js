@@ -49,21 +49,9 @@ async function searchTeamsInfoByName(TEAM_NAME){
   const teams_info = await axios.get(`${api_domain}/teams/search/${TEAM_NAME}`, {
       params: {
         include : "league",
-        api_token : 'vf02QEv5ZgECAvLugpNvLqLNMo2yRYfXEUTelhXxgyxzBMAo6LCc5aWurQu1', //process.env.api_token,
+        api_token : process.env.api_token,
       }
     });
-  // console.log(teams_info.data.data[0].league);
-  // let a = teams_info.data.data[0].league == undefined;
-  // let b = teams_info.data.data[0].league.data.id != LEAGUE_ID;
-  // if((a) || (b)){
-  //     throw error("Team not found"); 
-  // }
-  // const {id, name, logo_path} = teams_info.data.data[0];
-  // return {
-  //     team_id : id,
-  //     team_name: name,
-  //     logo_path: logo_path,
-  // };
   return extractTeamName(teams_info);
 }
 

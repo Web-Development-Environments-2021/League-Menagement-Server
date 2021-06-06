@@ -147,7 +147,7 @@ async function getPlayersInfoByNameFromAPI(player_name, queryParams) {
     const players_info = await axios.get(`${api_domain}/players/search/${player_name}`, {
         params: {
             include: queryParams,
-            api_token: 'vf02QEv5ZgECAvLugpNvLqLNMo2yRYfXEUTelhXxgyxzBMAo6LCc5aWurQu1', //process.env.api_token,
+            api_token: process.env.api_token,
         }
     });
     return players_info;
