@@ -97,7 +97,7 @@ function extractRelevantPlayerOrCoachData(players_info, isCoach = false) {
         if (player_info.fullname == undefined) {
             player_info = player_info.data.data;
         }
-        const { fullname, image_path, position_id } = player_info;
+        const { fullname, image_path, position } = player_info;
         var name = '';
         var id_ = '';
         if (!isCoach) {
@@ -110,7 +110,7 @@ function extractRelevantPlayerOrCoachData(players_info, isCoach = false) {
             id: id_,
             name: fullname,
             image: image_path,
-            position: position_id,
+            position: position,
             team_name: name,
         };
     });
@@ -176,7 +176,7 @@ function filterPlayersByTeamName(all_players_in_league, teamName) {
 }
 
 async function searchPlayersInfoByName(player_name) {
-    const players_info = await getPlayersInfoByNameFromAPI(player_name, "team.league");
+    const players_info = await getPlayersInfoByNameFromAPI(player_name, "team.league, position");
     const all_players_in_league = serachForReleventPlayersInLeague(players_info.data.data);
     const relvent_player_data = extractRelevantPlayerOrCoachData(all_players_in_league, false);
     return relvent_player_data;

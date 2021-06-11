@@ -5,19 +5,21 @@ const teams_utils = require("./utils/team_utils");
 const auth_utils = require("./utils/auth_utils");
 
 
-router.use("", async function(req, res, next) {
-    let status = auth_utils.get_curr_user_login_permoission()
-    if(status == null){
-        res.sendStatus(401);
-    }
-    else{
-        next();
-    }
-});
+// router.use("", async function(req, res, next) {
+//     let status = auth_utils.get_curr_user_login_permoission()
+//     if(status == null){
+//         next();
+//         // req.url = req.url.replace('/search/', '');
+//         // console.log(req.url);
+//     }
+//     else{
+//         res.sendStatus(401);
+//     }
+// });
 
 router.get("/players/:searchQuery", async(req, res, next) => {
     try {
-        const player_details = await players_utils.searchPlayersInfoByName(req.params.searchQuery);
+        const player_details = await players_utils.searchPlayersInfoByName(req.query.searchQuery);
         res.send(player_details);
     } catch (error) {
         next(error);
@@ -26,8 +28,8 @@ router.get("/players/:searchQuery", async(req, res, next) => {
 
 router.get("/players/:searchQuery/filterByPosition/:positionName", async(req, res, next)=>{
     try{
-        searchPlayer = req.params.searchQuery;
-        positionName = req.params.positionName;
+        searchPlayer = req.query.searchQuery;
+        positionName = req.query.positionName;
         const player_filter_by_position = await players_utils.searchPlayersInfoByNameFilterByPosition(searchPlayer,positionName);
         // res.send(player_filter_by_position);
         if(player_filter_by_position.length > 0){
@@ -43,8 +45,8 @@ router.get("/players/:searchQuery/filterByPosition/:positionName", async(req, re
 
 router.get("/players/:searchQuery/filterByTeam/:teamName", async(req, res, next)=>{
     try{
-        let searchPlayer = req.params.searchQuery;
-        let team_name = req.params.teamName;
+        let searchPlayer = req.query.searchQuery;
+        let team_name = req.query.teamName;
         const player_filter_by_teamName = await players_utils.searchPlayersInfoByNameAndFilterByTeamName(searchPlayer, team_name);
         res.send(player_filter_by_teamName);
     } catch(error){
@@ -55,8 +57,8 @@ router.get("/players/:searchQuery/filterByTeam/:teamName", async(req, res, next)
 
 router.get("/teams/:searchQuery", async (req, res, next) =>{
     try{
-        console.log(req.params.searchQuery);
-        const team_details = await teams_utils.searchTeamsInfoByName(req.params.searchQuery);
+        console.log(req.query.searchQuery);
+        const team_details = await teams_utils.searchTeamsInfoByName(req.query.searchQuery);
         if(team_details.length > 0){
             res.send(team_details);
         }

@@ -3,6 +3,15 @@ var router = express.Router();
 const league_utils = require("./utils/league_utils");
 const auth_utils = require("./utils/auth_utils");
 
+router.get("/getDetails", async(req, res, next) => {
+    try {
+        const league_details = await league_utils.getLeagueDetails();
+        res.send(league_details);
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.use("", async function(req, res, next) {
     let status = auth_utils.get_curr_user_login_permoission()
     if (status == null) {
@@ -12,14 +21,7 @@ router.use("", async function(req, res, next) {
     }
 });
 
-router.get("/getDetails", async(req, res, next) => {
-    try {
-        const league_details = await league_utils.getLeagueDetails();
-        res.send(league_details);
-    } catch (error) {
-        next(error);
-    }
-});
+
 
 router.get("/getPastGame", async(req, res, next) => {
     try {
