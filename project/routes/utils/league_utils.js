@@ -36,7 +36,8 @@ async function getLeagueDetails() {
         home_team: next_games[0].home_team_name,
         away_team: next_games[0].away_team_name,
         date: next_games[0].date,
-        field: next_games[0].field
+        field: next_games[0].field,
+        nextGame: next_games[0].id
     };
 }
 
