@@ -86,7 +86,19 @@ async function getPastGameDetails() {
     games_info = await DButils.execQuery(
         query
     );
-    return games_info;
+    game_ids = [];
+    games_info.map((game_info) => {
+        game_ids.push(game_info.id + '001');
+        game_ids.push(game_info.id + '002');
+        game_ids.push(game_info.id + '003');
+        game_info["events_id"] = [game_info.id + '001', game_info.id + '002', game_info.id + '003']
+    })
+    var query0 = `select * from dbo.events_schedule where events_scheduleID in (${game_ids})`
+    events_info = await DButils.execQuery(
+        query0
+    );
+
+    return { games_info, events_info };
 }
 async function getFutureGameDetails() {
     var query = `select * from dbo.games where date>='${today.toISOString().slice(0, 19).replace('T', ' ')}'  order by date ASC`

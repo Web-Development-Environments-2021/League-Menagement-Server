@@ -23,8 +23,8 @@ router.get("/getDetails", async(req, res, next) => {
 
 router.get("/getPastGame", async(req, res, next) => {
     try {
-        const game_details = await league_utils.getPastGameDetails();
-        res.send(game_details);
+        const { games_info, events_info } = await league_utils.getPastGameDetails();
+        res.send({ games_info, events_info });
     } catch (error) {
         next(error);
     }
