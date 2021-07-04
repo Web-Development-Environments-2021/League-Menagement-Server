@@ -26,48 +26,45 @@ router.get("/players/:searchQuery", async(req, res, next) => {
     }
 });
 
-router.get("/players/:searchQuery/filterByPosition/:positionName", async(req, res, next)=>{
-    try{
+router.get("/players/:searchQuery/filterByPosition/:positionName", async(req, res, next) => {
+    try {
         searchPlayer = req.query.searchQuery;
         positionName = req.query.positionName;
-        const player_filter_by_position = await players_utils.searchPlayersInfoByNameFilterByPosition(searchPlayer,positionName);
+        const player_filter_by_position = await players_utils.searchPlayersInfoByNameFilterByPosition(searchPlayer, positionName);
         // res.send(player_filter_by_position);
-        if(player_filter_by_position.length > 0){
+        if (player_filter_by_position.length > 0) {
             res.send(player_filter_by_position);
-        }
-        else{
+        } else {
             res.sendStatus(204);
         }
-    } catch(error){
+    } catch (error) {
         next(error);
     }
 });
 
-router.get("/players/:searchQuery/filterByTeam/:teamName", async(req, res, next)=>{
-    try{
+router.get("/players/:searchQuery/filterByTeam/:teamName", async(req, res, next) => {
+    try {
         let searchPlayer = req.query.searchQuery;
         let team_name = req.query.teamName;
         const player_filter_by_teamName = await players_utils.searchPlayersInfoByNameAndFilterByTeamName(searchPlayer, team_name);
         res.send(player_filter_by_teamName);
-    } catch(error){
+    } catch (error) {
         next(error);
     }
 });
 
 
-router.get("/teams/:searchQuery", async (req, res, next) =>{
-    try{
+router.get("/teams/:searchQuery", async(req, res, next) => {
+    try {
         console.log(req.query.searchQuery);
         const team_details = await teams_utils.searchTeamsInfoByName(req.query.searchQuery);
-        if(team_details.length > 0){
+        if (team_details.length > 0) {
             res.send(team_details);
-        }
-        else{
+        } else {
             console.log('Team not found!');
             res.status(204).send("Team not found!");
         }
-    }
-    catch(error){
+    } catch (error) {
         next(error);
         // res.status(500).send('Team not found!')    
     }
