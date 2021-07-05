@@ -32,13 +32,12 @@ router.get("/players/:searchQuery/filterByPosition/:positionName", async(req, re
         positionName = req.params.positionName;
         const player_filter_by_position = await players_utils.searchPlayersInfoByNameFilterByPosition(searchPlayer,positionName);
         // res.send(player_filter_by_position);
-        if(player_filter_by_position.length > 0){
+        if (player_filter_by_position.length > 0) {
             res.send(player_filter_by_position);
-        }
-        else{
+        } else {
             res.sendStatus(204);
         }
-    } catch(error){
+    } catch (error) {
         next(error);
     }
 });
@@ -50,7 +49,7 @@ router.get("/players/:searchQuery/filterByTeam/:teamName", async(req, res, next)
         let team_name = req.params.teamName;
         const player_filter_by_teamName = await players_utils.searchPlayersInfoByNameAndFilterByTeamName(searchPlayer, team_name);
         res.send(player_filter_by_teamName);
-    } catch(error){
+    } catch (error) {
         next(error);
     }
 });
@@ -62,13 +61,11 @@ router.get("/teams/:searchQuery", async (req, res, next) =>{
         const team_details = await teams_utils.searchTeamsInfoByName(req.params.searchQuery);
         if(team_details.length > 0){
             res.send(team_details);
-        }
-        else{
+        } else {
             console.log('Team not found!');
             res.status(204).send("Team not found!");
         }
-    }
-    catch(error){
+    } catch (error) {
         next(error);
         // res.status(500).send('Team not found!')    
     }
