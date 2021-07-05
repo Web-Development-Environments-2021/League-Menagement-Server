@@ -10,6 +10,13 @@ async function markGameAsFavorite(user_id, game_id) {
     if (game_ids.length == 0) {
         throw new TypeError("no game with this game_id");
     }
+    let inFavoriteAllready = `select game_id from dbo.favoriteGames where game_id =${game_id}`;
+    const inFavorite = await DButils.execQuery(
+        inFavoriteAllready
+    );
+    if (inFavorite.length != 0) {
+        throw new TypeError("This Game all ready in your favotires games");
+    }
     var query = `insert into dbo.favoriteGames (user_id,game_id) values (${user_id},${game_ids[0]["id"]})`;
     await DButils.execQuery(
         query

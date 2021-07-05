@@ -19,7 +19,7 @@ const auth_utils = require("./utils/auth_utils");
 
 router.get("/players/:searchQuery", async(req, res, next) => {
     try {
-        const player_details = await players_utils.searchPlayersInfoByName(req.query.searchQuery);
+        const player_details = await players_utils.searchPlayersInfoByName(req.params.searchQuery);
         res.send(player_details);
     } catch (error) {
         next(error);
@@ -28,8 +28,8 @@ router.get("/players/:searchQuery", async(req, res, next) => {
 
 router.get("/players/:searchQuery/filterByPosition/:positionName", async(req, res, next)=>{
     try{
-        searchPlayer = req.query.searchQuery;
-        positionName = req.query.positionName;
+        searchPlayer = req.params.searchQuery;
+        positionName = req.params.positionName;
         const player_filter_by_position = await players_utils.searchPlayersInfoByNameFilterByPosition(searchPlayer,positionName);
         // res.send(player_filter_by_position);
         if(player_filter_by_position.length > 0){
@@ -45,8 +45,9 @@ router.get("/players/:searchQuery/filterByPosition/:positionName", async(req, re
 
 router.get("/players/:searchQuery/filterByTeam/:teamName", async(req, res, next)=>{
     try{
-        let searchPlayer = req.query.searchQuery;
-        let team_name = req.query.teamName;
+        let searchPlayer = req.params.searchQuery;
+        
+        let team_name = req.params.teamName;
         const player_filter_by_teamName = await players_utils.searchPlayersInfoByNameAndFilterByTeamName(searchPlayer, team_name);
         res.send(player_filter_by_teamName);
     } catch(error){
@@ -57,8 +58,8 @@ router.get("/players/:searchQuery/filterByTeam/:teamName", async(req, res, next)
 
 router.get("/teams/:searchQuery", async (req, res, next) =>{
     try{
-        console.log(req.query.searchQuery);
-        const team_details = await teams_utils.searchTeamsInfoByName(req.query.searchQuery);
+        console.log(req.params.searchQuery);
+        const team_details = await teams_utils.searchTeamsInfoByName(req.params.searchQuery);
         if(team_details.length > 0){
             res.send(team_details);
         }

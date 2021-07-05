@@ -12,17 +12,6 @@ router.get("/getDetails", async(req, res, next) => {
     }
 });
 
-router.use("", async function(req, res, next) {
-    let status = auth_utils.get_curr_user_login_permoission()
-    if (status == null) {
-        res.sendStatus(401);
-    } else {
-        next();
-    }
-});
-
-
-
 router.get("/getPastGame", async(req, res, next) => {
     try {
         const { games_info, events_info } = await league_utils.getPastGameDetails();

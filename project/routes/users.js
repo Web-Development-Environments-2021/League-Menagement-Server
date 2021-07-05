@@ -50,7 +50,8 @@ router.post("/addFavoriteGames", async(req, res, next) => {
         const status = await users_utils.markGameAsFavorite(user_id, game_id);
         res.status(201).send(status);
     } catch (error) {
-        next(error);
+        res.status(204).send(error.message);
+        // next(error);
     }
 });
 
