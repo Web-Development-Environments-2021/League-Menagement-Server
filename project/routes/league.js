@@ -12,7 +12,6 @@ router.get("/getDetails", async(req, res, next) => {
     }
 });
 
-
 router.get("/getPastGame", async(req, res, next) => {
     try {
         const { games_info, events_info } = await league_utils.getPastGameDetails();
