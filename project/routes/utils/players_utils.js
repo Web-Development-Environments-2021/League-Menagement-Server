@@ -25,7 +25,7 @@ async function getPlayersInfo(players_ids_list, isFull) {
             axios.get(`${api_domain}/players/${id}`, {
                 params: {
                     api_token: process.env.api_token,
-                    include: "team",
+                    include: "team, position",
                 },
             })
         )
@@ -97,7 +97,8 @@ function extractRelevantPlayerOrCoachData(players_info, isCoach = false) {
         if (player_info.fullname == undefined) {
             player_info = player_info.data.data;
         }
-        const { fullname, image_path, position } = player_info;
+        const { fullname, image_path } = player_info;
+        const position = player_info.position.data.name;
         var name = '';
         var id_ = '';
         if (!isCoach) {
