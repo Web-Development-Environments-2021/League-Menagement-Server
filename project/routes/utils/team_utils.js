@@ -33,16 +33,17 @@ function extractTeamName(teams_info) {
     return teams;
 }
 
-// async function getAllTeamsByCountry(COUNTRY_ID){
-//   let promises = [];
-//   let teams_info = await axios.get(`https://soccer.sportmonks.com/api/v2.0/countries/${COUNTRY_ID}/teams`, {
-//       params: {
-//           api_token: process.env.api_token,
-//       },
-//   });
-//   var all_teams_name = extractTeamName(teams_info);
-//   return all_teams_name;
-// }
+async function getAllTeamsByCountry(COUNTRY_ID) {
+    let promises = [];
+    let teams_info = await axios.get(`https://soccer.sportmonks.com/api/v2.0/countries/${COUNTRY_ID}/teams`, {
+        params: {
+            api_token: process.env.api_token,
+            include: "league"
+        },
+    });
+    var all_teams_name = extractTeamName(teams_info);
+    return all_teams_name;
+}
 
 async function searchTeamsInfoByName(TEAM_NAME) {
     console.log(TEAM_NAME);
@@ -57,5 +58,5 @@ async function searchTeamsInfoByName(TEAM_NAME) {
 
 
 exports.searchTeamsInfoByName = searchTeamsInfoByName;
-// exports.getAllTeamsByCountry = getAllTeamsByCountry;
+exports.getAllTeamsByCountry = getAllTeamsByCountry;
 exports.getCoachName = getCoachName;
