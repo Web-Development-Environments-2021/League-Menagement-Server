@@ -32,18 +32,18 @@ router.get("/getFutureGame", async(req, res, next) => {
 });
 
 
-// router.use("", async function(req, res, next) {
-//     let status = auth_utils.get_curr_user_login_permoission()
-//     if (status) {
-//         next();
-//     } else {
-//         if (status == null) {
-//             res.sendStatus(401);
-//         } else if (status == false) {
-//             res.sendStatus(403);
-//         }
-//     }
-// });
+router.use("", async function(req, res, next) {
+    let status = auth_utils.get_curr_user_login_permoission()
+    if (status) {
+        next();
+    } else {
+        if (status == null) {
+            res.sendStatus(401);
+        } else if (status == false) {
+            res.sendStatus(403);
+        }
+    }
+});
 
 router.get("/add&getRandFutureGames", async(req, res, next) => {
     try {

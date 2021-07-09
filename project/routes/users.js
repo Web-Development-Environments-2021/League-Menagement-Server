@@ -45,6 +45,7 @@ router.get("/getFavoriteGames", async(req, res, next) => {
 
 router.post("/addFavoriteGames", async(req, res, next) => {
     try {
+        console.log(req.session.user_id);
         const user_id = req.session.user_id;
         const game_id = req.body.game_id;
         const status = await users_utils.markGameAsFavorite(user_id, game_id);
