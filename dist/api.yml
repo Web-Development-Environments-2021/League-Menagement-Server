@@ -334,6 +334,28 @@ paths:
                   $ref: "#/components/schemas/newGame"
         "400":
           description: wrong input parameters
+  /league/insertNewEvent/:
+    post:
+      tags:
+        - league
+      summary: insert details for create new event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newEvent'
+      responses:
+        "200":
+          description: insert details to create event, this endpoint can access only by the Representative
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/newEvent"
+        "400":
+          description: wrong input parameters
   /search/teams/{searchQuery}:
     get:
       tags:
@@ -763,6 +785,24 @@ components:
         referee:
           type: int
           example: 2
+    newEvent:
+      type: object
+      properties:
+        game_id:
+          type: string
+          example: 18102255
+        date_event:
+          type: string
+          example: "2021-08-12"
+        time_event:
+          type: string
+          example: "16:00:00"
+        minute_game:
+          type: string
+          example: "45"     
+        evnet_description:
+          type: string
+          example: yellowcard
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
