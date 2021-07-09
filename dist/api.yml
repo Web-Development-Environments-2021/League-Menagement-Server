@@ -355,6 +355,28 @@ paths:
                 items:
                   $ref: "#/components/schemas/newEvent"
         "400":
+          description: wrong input parameters/
+  league/insertGameScore/:
+    post:
+      tags:
+        - league
+      summary: insert details to add score to past game
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newscore'
+      responses:
+        "200":
+          description: insert details to add score into past game, this endpoint can access only by the Representative
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/newscore"
+        "400":
           description: wrong input parameters
   /search/teams/{searchQuery}:
     get:
@@ -803,6 +825,24 @@ components:
         evnet_description:
           type: string
           example: yellowcard
+    newscore:
+      type: object
+      properties:
+        game_id_score_form:
+          type: string
+          example: 18102255
+        selectedHomeTeamScoreFrom:
+          type: string
+          example: Midtjylland
+        selectedAwayTeamScoreFrom:
+          type: string
+          example: Aab
+        home_score:
+          type: string
+          example: 4
+        away_score:
+          type: string
+          example: 0
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
