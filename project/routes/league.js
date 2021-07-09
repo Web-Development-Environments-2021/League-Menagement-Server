@@ -32,18 +32,18 @@ router.get("/getFutureGame", async(req, res, next) => {
 });
 
 
-router.use("", async function(req, res, next) {
-    let status = auth_utils.get_curr_user_login_permoission()
-    if (status) {
-        next();
-    } else {
-        if (status == null) {
-            res.sendStatus(401);
-        } else if (status == false) {
-            res.sendStatus(403);
-        }
-    }
-});
+// router.use("", async function(req, res, next) {
+//     let status = auth_utils.get_curr_user_login_permoission()
+//     if (status) {
+//         next();
+//     } else {
+//         if (status == null) {
+//             res.sendStatus(401);
+//         } else if (status == false) {
+//             res.sendStatus(403);
+//         }
+//     }
+// });
 
 router.get("/add&getRandFutureGames", async(req, res, next) => {
     try {
@@ -90,6 +90,15 @@ router.post("/addReferee", async(req, res, next) => {
         // next(error);
         console.log(error);
         res.status(404).send("something went wrong cannot add new referee")
+    }
+})
+router.post("/addEvent", async(req, res, next) => {
+    try {
+        const result = await league_utils.addEvent(req.body.game_id, req.body.event_description, req.body.minute_game, req.body.time_event, req.body.date_event, req.body.player_id, req.body.player_name);
+        res.send(result);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send("something went wrong cannot add new event")
     }
 })
 

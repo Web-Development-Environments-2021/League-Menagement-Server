@@ -26,11 +26,11 @@ router.get("/players/:searchQuery", async(req, res, next) => {
     }
 });
 
-router.get("/players/:searchQuery/filterByPosition/:positionName", async(req, res, next)=>{
-    try{
+router.get("/players/:searchQuery/filterByPosition/:positionName", async(req, res, next) => {
+    try {
         searchPlayer = req.params.searchQuery;
         positionName = req.params.positionName;
-        const player_filter_by_position = await players_utils.searchPlayersInfoByNameFilterByPosition(searchPlayer,positionName);
+        const player_filter_by_position = await players_utils.searchPlayersInfoByNameFilterByPosition(searchPlayer, positionName);
         // res.send(player_filter_by_position);
         if (player_filter_by_position.length > 0) {
             res.send(player_filter_by_position);
@@ -42,10 +42,10 @@ router.get("/players/:searchQuery/filterByPosition/:positionName", async(req, re
     }
 });
 
-router.get("/players/:searchQuery/filterByTeam/:teamName", async(req, res, next)=>{
-    try{
+router.get("/players/:searchQuery/filterByTeam/:teamName", async(req, res, next) => {
+    try {
         let searchPlayer = req.params.searchQuery;
-        
+
         let team_name = req.params.teamName;
         const player_filter_by_teamName = await players_utils.searchPlayersInfoByNameAndFilterByTeamName(searchPlayer, team_name);
         res.send(player_filter_by_teamName);
@@ -55,11 +55,13 @@ router.get("/players/:searchQuery/filterByTeam/:teamName", async(req, res, next)
 });
 
 
-router.get("/teams/:searchQuery", async (req, res, next) =>{
-    try{
+router.get("/teams/:searchQuery", async(req, res, next) => {
+    try {
         console.log(req.params.searchQuery);
+        console.log('00000000')
+        console.log(req.params.searchQuery)
         const team_details = await teams_utils.searchTeamsInfoByName(req.params.searchQuery);
-        if(team_details.length > 0){
+        if (team_details.length > 0) {
             res.send(team_details);
         } else {
             console.log('Team not found!');

@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { query } = require("express");
 const { DateTime } = require("mssql");
 const { resolve } = require("path");
 const DButils = require("../utils/DButils");
@@ -8,6 +9,33 @@ const today = new Date();
 const STARTDATE = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 const ENDATEFUTURE = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate() + 5);
 const ENDATEPAST = today.getFullYear() + '-' + (today.getMonth()) + '-' + (today.getDate() + 10);
+
+async function addEvent(game_id, event_description, minute_game, time_event, date_event, player_id, player_name) {
+    var query = `select max(events_scheduleID) from dbo.events_schedule where events_scheduleID LIKE '${game_id}%'`;
+    res = await DButils.execQuery(query);
+    console.log(res);
+    var new_id = 0;
+    if (res.length == 0) {
+        new_id = game_id + '001'
+    } else {
+        new_id = String(parseInt(res[0]['']) + 1);
+    }
+
+    const event_info = {
+        events_scheduleID: new_id,
+        date: `'${date_event +' '+ time_event}'`,
+        minute: minute_game,
+        player_id: player_id,
+        player_name: `'${player_name}'`,
+        type: `'${event_description}'`,
+    };
+
+    query = `INSERT INTO dbo.events_schedule (${Object.keys(event_info)}) VALUES (${Object.values(event_info)})`
+    await DButils.execQuery(
+        query
+    );
+
+}
 
 async function getLeagueDetails() {
     const league = await axios.get(
@@ -92,6 +120,9 @@ async function getPastGameDetails() {
     return { games_info, events_info };
 }
 async function getEventsGames(games_info) {
+    if (games_info.length == 0) {
+        return {};
+    }
     game_ids = [];
     games_info.map((game_info) => {
         game_ids.push(game_info.id + '001');
@@ -175,7 +206,6 @@ async function insert_events(events, date, time) {
             date: `'${date +' '+ new_time}'`,
             // time: `'${new_time}'`,
             minute: minute,
-            extra_minute: extra_minute,
             player_id: player.data.player_id,
             player_name: `'${player.data.fullname}'`,
             type: `'${type}'`,
@@ -304,3 +334,4 @@ exports.insertNewGame = insertNewGame;
 exports.getGameDetailsById = getGameDetailsById;
 exports.getFutureGameDetailsByTeam = getFutureGameDetailsByTeam;
 exports.getPastGameDetailsByTeam = getPastGameDetailsByTeam;
+exports.addEvent = addEvent;

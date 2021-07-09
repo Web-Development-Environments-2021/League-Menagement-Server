@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { query } = require("express");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const LEAGUE_ID = 271;
 
@@ -47,12 +48,17 @@ async function getAllTeamsByCountry(COUNTRY_ID) {
 
 async function searchTeamsInfoByName(TEAM_NAME) {
     console.log(TEAM_NAME);
-    const teams_info = await axios.get(`${api_domain}/teams/search/${TEAM_NAME}`, {
+    const query = `${api_domain}/teams/search/${TEAM_NAME}`;
+    console.log(query)
+    const teams_info = await axios.get(query, {
         params: {
             include: "league",
             api_token: process.env.api_token,
         }
     });
+
+
+
     return extractTeamName(teams_info);
 }
 
