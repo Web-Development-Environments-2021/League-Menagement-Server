@@ -102,6 +102,16 @@ router.post("/addEvent", async(req, res, next) => {
     }
 })
 
+router.post("/insertGameScore", async(req, res, next) => {
+    try {
+        const result = await league_utils.insertNewGameScore(req.body.game_id_score_form, req.body.selectedHomeTeamScoreFrom, req.body.selectedAwayTeamScoreFrom, req.body.home_score, req.body.away_score);
+        res.send(result);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send("something went wrong cannot add new event")
+    }
+})
+
 router.post("/insertNewGame", async(req, res, next) => {
     try {
         const new_game_details = await league_utils.insertNewGame(

@@ -34,8 +34,43 @@ async function addEvent(game_id, event_description, minute_game, time_event, dat
     await DButils.execQuery(
         query
     );
-
 }
+
+async function insertNewGameScore(game_id_score_form, selectedHomeTeamScoreFrom, selectedAwayTeamScoreFrom, home_score, away_score){
+    // let query = `select max(id) from dbo.games`
+    // let max_id = await DButils.execQuery(
+    //     query
+    // );
+    // let str_max_id = String(parseInt(max_id[0]['']) + 1);
+
+    let winner_status = 'Draw';
+    if (home_score > away_score){
+        winner_status=selectedHomeTeamScoreFrom;
+    }
+    else if(home_score < away_score){
+        winner_status=selectedAwayTeamScoreFrom;
+    }
+    let game_info = {
+        id: game_id_score_form,
+        // date: `'${_date + ' ' + _time}'`,
+        // league_name: `'${_league_name}'`,
+        // home_team_name: `'${_home_team_name}'`,
+        // away_team_name: `'${_away_team_name}'`,
+        home_score: home_score,
+        away_score: away_score,
+        // field: `'${_field}'`,
+        winner: winner_status
+    };
+
+    // query = `INSERT INTO dbo.games (${Object.keys(game_info)}) VALUES (${Object.values(game_info)})`
+    // await DButils.execQuery(
+    //     query
+    // );
+
+    // next game details should come from DB
+    return game_info;
+}
+
 
 async function getLeagueDetails() {
     const league = await axios.get(
@@ -335,3 +370,4 @@ exports.getGameDetailsById = getGameDetailsById;
 exports.getFutureGameDetailsByTeam = getFutureGameDetailsByTeam;
 exports.getPastGameDetailsByTeam = getPastGameDetailsByTeam;
 exports.addEvent = addEvent;
+exports.insertNewGameScore = insertNewGameScore;
