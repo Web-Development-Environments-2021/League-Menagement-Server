@@ -98,12 +98,13 @@ function extractRelevantPlayerOrCoachData(players_info, isCoach = false) {
             player_info = player_info.data.data;
         }
         const { fullname, image_path } = player_info;
-        const position = player_info.position.data.name;
         var name = '';
         var id_ = '';
+        var position = '';
         if (!isCoach) {
             name = player_info.team.data.name;
             id_ = player_info.player_id;
+            position = player_info.position.data.name;
         } else {
             id_ = player_info.coach_id;
         }
